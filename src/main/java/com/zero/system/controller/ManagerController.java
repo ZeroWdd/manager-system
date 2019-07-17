@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * @Classname ManagerController
- * @Description None
+ * @Description 后台控制器
  * @Date 2019/7/16 14:43
  * @Created by WDD
  */
@@ -31,11 +31,20 @@ public class ManagerController {
     @Autowired
     private TreeMenuService treeMenuService;
 
+    /**
+     * 跳转后台页面
+     * @return
+     */
     @GetMapping("/index")
     public String index(){
         return "manager/index";
     }
 
+    /**
+     * 异步加载权限树
+     * @param session
+     * @return
+     */
     @PostMapping("/treeMenu")
     @ResponseBody
     public Object treeMenu(HttpSession session){
@@ -48,6 +57,10 @@ public class ManagerController {
         return treeMenuList;
     }
 
+    /**
+     * 异步加载后台主页
+     * @return
+     */
     @GetMapping("/console")
     public String console(){
         return "manager/console";
