@@ -5,9 +5,11 @@
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="username" jdbcType="VARCHAR" property="username" />
         <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
     </resultMap>
     <sql id="Base_Column_List">
-        id,username,password
+        id,username,password,phone,email
     </sql>
 
     <select id="login" resultMap="BaseResultMap">
@@ -17,82 +19,25 @@
         where username = #{username,jdbcType=VARCHAR} AND password=#{password,jdbcType=VARCHAR}
     </select>
 
-<!--    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">-->
-<!--        select-->
-<!--        <include refid="Base_Column_List" />-->
-<!--        from tb_admin_user-->
-<!--        where admin_user_id = #{adminUserId,jdbcType=INTEGER}-->
-<!--    </select>-->
+    <select id="queryList" resultMap="BaseResultMap" >
+        <!-- 根据条件查询 图书的所有信息 -->
+        select
+        <include refid="Base_Column_List" />
+        from admin
+        <where>
+            <if test="username!=null"> and username LIKE concat("%",#{username},"%") </if>
+            <if test="email!=null"> and email = #{email} </if>
+            <if test="phone!=null"> and phone = #{phone} </if>
+        </where>
+        limit #{startIndex},#{pagesize}
+    </select>
 
-<!--    &lt;!&ndash;    <insert id="insert" parameterType="com.site.blog.my.core.entity.AdminUser">&ndash;&gt;-->
-<!--    &lt;!&ndash;    insert into tb_admin_user (admin_user_id, login_user_name, login_password, &ndash;&gt;-->
-<!--    &lt;!&ndash;      nick_name, locked)&ndash;&gt;-->
-<!--    &lt;!&ndash;    values (#{adminUserId,jdbcType=INTEGER}, #{loginUserName,jdbcType=VARCHAR}, #{loginPassword,jdbcType=VARCHAR}, &ndash;&gt;-->
-<!--    &lt;!&ndash;      #{nickName,jdbcType=VARCHAR}, #{locked,jdbcType=TINYINT})&ndash;&gt;-->
-<!--    &lt;!&ndash;  </insert>&ndash;&gt;-->
-<!--    &lt;!&ndash;    <insert id="insertSelective" parameterType="com.site.blog.my.core.entity.AdminUser">&ndash;&gt;-->
-<!--    &lt;!&ndash;        insert into tb_admin_user&ndash;&gt;-->
-<!--    &lt;!&ndash;        <trim prefix="(" suffix=")" suffixOverrides=",">&ndash;&gt;-->
-<!--    &lt;!&ndash;            <if test="adminUserId != null">&ndash;&gt;-->
-<!--    &lt;!&ndash;                admin_user_id,&ndash;&gt;-->
-<!--    &lt;!&ndash;            </if>&ndash;&gt;-->
-<!--    &lt;!&ndash;            <if test="loginUserName != null">&ndash;&gt;-->
-<!--    &lt;!&ndash;                login_user_name,&ndash;&gt;-->
-<!--    &lt;!&ndash;            </if>&ndash;&gt;-->
-<!--    &lt;!&ndash;            <if test="loginPassword != null">&ndash;&gt;-->
-<!--    &lt;!&ndash;                login_password,&ndash;&gt;-->
-<!--    &lt;!&ndash;            </if>&ndash;&gt;-->
-<!--    &lt;!&ndash;            <if test="nickName != null">&ndash;&gt;-->
-<!--    &lt;!&ndash;                nick_name,&ndash;&gt;-->
-<!--    &lt;!&ndash;            </if>&ndash;&gt;-->
-<!--    &lt;!&ndash;            <if test="locked != null">&ndash;&gt;-->
-<!--    &lt;!&ndash;                locked,&ndash;&gt;-->
-<!--    &lt;!&ndash;            </if>&ndash;&gt;-->
-<!--    &lt;!&ndash;        </trim>&ndash;&gt;-->
-<!--    &lt;!&ndash;        <trim prefix="values (" suffix=")" suffixOverrides=",">&ndash;&gt;-->
-<!--    &lt;!&ndash;            <if test="adminUserId != null">&ndash;&gt;-->
-<!--    &lt;!&ndash;                #{adminUserId,jdbcType=INTEGER},&ndash;&gt;-->
-<!--    &lt;!&ndash;            </if>&ndash;&gt;-->
-<!--    &lt;!&ndash;            <if test="loginUserName != null">&ndash;&gt;-->
-<!--    &lt;!&ndash;                #{loginUserName,jdbcType=VARCHAR},&ndash;&gt;-->
-<!--    &lt;!&ndash;            </if>&ndash;&gt;-->
-<!--    &lt;!&ndash;            <if test="loginPassword != null">&ndash;&gt;-->
-<!--    &lt;!&ndash;                #{loginPassword,jdbcType=VARCHAR},&ndash;&gt;-->
-<!--    &lt;!&ndash;            </if>&ndash;&gt;-->
-<!--    &lt;!&ndash;            <if test="nickName != null">&ndash;&gt;-->
-<!--    &lt;!&ndash;                #{nickName,jdbcType=VARCHAR},&ndash;&gt;-->
-<!--    &lt;!&ndash;            </if>&ndash;&gt;-->
-<!--    &lt;!&ndash;            <if test="locked != null">&ndash;&gt;-->
-<!--    &lt;!&ndash;                #{locked,jdbcType=TINYINT},&ndash;&gt;-->
-<!--    &lt;!&ndash;            </if>&ndash;&gt;-->
-<!--    &lt;!&ndash;        </trim>&ndash;&gt;-->
-<!--    &lt;!&ndash;    </insert>&ndash;&gt;-->
-
-<!--    <update id="updateByPrimaryKeySelective" parameterType="com.wdd.myblog.entity.AdminUser">-->
-<!--        update tb_admin_user-->
-<!--        <set>-->
-<!--            <if test="loginUserName != null">-->
-<!--                login_user_name = #{loginUserName,jdbcType=VARCHAR},-->
-<!--            </if>-->
-<!--            <if test="loginPassword != null">-->
-<!--                login_password = #{loginPassword,jdbcType=VARCHAR},-->
-<!--            </if>-->
-<!--            <if test="nickName != null">-->
-<!--                nick_name = #{nickName,jdbcType=VARCHAR},-->
-<!--            </if>-->
-<!--            <if test="locked != null">-->
-<!--                locked = #{locked,jdbcType=TINYINT},-->
-<!--            </if>-->
-<!--        </set>-->
-<!--        where admin_user_id = #{adminUserId,jdbcType=INTEGER}-->
-<!--    </update>-->
-
-<!--    &lt;!&ndash;    <update id="updateByPrimaryKey" parameterType="com.site.blog.my.core.entity.AdminUser">&ndash;&gt;-->
-<!--    &lt;!&ndash;    update tb_admin_user&ndash;&gt;-->
-<!--    &lt;!&ndash;    set login_user_name = #{loginUserName,jdbcType=VARCHAR},&ndash;&gt;-->
-<!--    &lt;!&ndash;      login_password = #{loginPassword,jdbcType=VARCHAR},&ndash;&gt;-->
-<!--    &lt;!&ndash;      nick_name = #{nickName,jdbcType=VARCHAR},&ndash;&gt;-->
-<!--    &lt;!&ndash;      locked = #{locked,jdbcType=TINYINT}&ndash;&gt;-->
-<!--    &lt;!&ndash;    where admin_user_id = #{adminUserId,jdbcType=INTEGER}&ndash;&gt;-->
-<!--    &lt;!&ndash;  </update>&ndash;&gt;-->
+    <select id="queryCount" resultType="int" >
+        select count(*) from admin
+        <where>
+            <if test="username!=null"> and username LIKE concat("%",#{username},"%") </if>
+            <if test="email!=null"> and email = #{email} </if>
+            <if test="phone!=null"> and phone = #{phone} </if>
+        </where>
+    </select>
 </mapper>

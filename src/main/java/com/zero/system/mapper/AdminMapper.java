@@ -2,6 +2,9 @@ package com.zero.system.mapper;
 
 import com.zero.system.entity.Admin;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Classname AdminMapper
  * @Description None
@@ -11,4 +14,8 @@ import com.zero.system.entity.Admin;
 public interface AdminMapper {
 
     Admin login(String username, String password);
+
+    List<Admin> queryList(Map<String, Object> paramMap);
+
+    Integer queryCount(Map<String, Object> paramMap);
 }
