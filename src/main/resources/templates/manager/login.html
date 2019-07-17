@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>后台登录</title>
+
+    <!--  layui  -->
+    <link rel="stylesheet" th:href="@{/X-admin/lib/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/X-admin/lib/layui/css/modules/layer/default/layer.css}">
+
+    <!--背景配置-->
+    <link rel="stylesheet" th:href="@{/mystatic/particles/css/style.css}">
+    <link rel="stylesheet" th:href="@{/mystatic/login/css/login.css}">
+
+    <style>
+
+    </style>
+</head>
+<body>
+    <!--背景渲染-->
+    <div id="particles-js"></div>
+
+    <div class="box">
+        <form action="" class="layui-form">
+            <h1>Login</h1>
+            <input type="text" name="username" autocomplete="off" placeholder="Username" lay-verify="required"/>
+            <input type="password" name="password" placeholder="Password" lay-verify="required"/>
+            <a class="submit" lay-submit lay-filter="login">Login</a>
+        </form>
+    </div>
+
+    <!--jquery-->
+    <script th:src="@{/X-admin/js/jquery.min.js}"></script>
+    <!--layui-->
+    <script th:src="@{/X-admin/lib/layui/layui.all.js}"></script>
+    <!--背景配置-->
+    <script th:src="@{/mystatic/particles/js/particles.js}"></script>
+    <script th:src="@{/mystatic/particles/js/app.js}"></script>
+
+    <script>
+        $(function () {
+            layui.use(['form','layer','jquery'], function(){
+                var form = layui.form;
+                var $ = layui.jquery;
+                form.on('submit(login)',function (data) {
+                    $.ajax({
+                        url:'/manager/login',
+                        data:data.field,
+                        dataType:'json',
+                        type:'post',
+                        success:function (data) {
+                            if (data.success){
+                                layer.msg(data.message,{time:700},function() {
+                                    window.location.href = "/manager/index";
+                                })
+                            }else{
+                                layer.msg(data.message,{time:700},function() {
+
+                                })
+                            }
+                        }
+                    })
+                    return false;
+                })
+            });
+        })
+    </script>
+</body>
+</html>

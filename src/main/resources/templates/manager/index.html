@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>后台管理系统</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
+    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
+</head>
+<body class="layui-layout-body">
+
+<div id="LAY_app">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 头部区域 -->
+        <div th:replace="/manager/common/header::header-div"></div>
+
+        <!-- 侧边菜单 -->
+        <div th:replace="/manager/common/sidebar::sidebar-div"></div>
+
+
+        <!-- 页面标签 -->
+        <div class="layadmin-pagetabs" id="LAY_app_tabs">
+            <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+            <div class="layui-icon layadmin-tabs-control layui-icon-down">
+                <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:;"></a>
+                        <dl class="layui-nav-child layui-anim-fadein">
+                            <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+                            <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+                            <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+            <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+                <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                    <li lay-id="home/console.html" lay-attr="/manager/console" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- 主体内容 -->
+        <div class="layui-body" id="LAY_app_body">
+            <div class="layadmin-tabsbody-item layui-show">
+                <iframe th:src="@{/manager/console}" frameborder="0" class="layadmin-iframe"></iframe>
+            </div>
+        </div>
+
+        <!-- 辅助元素，一般用于移动设备下遮罩 -->
+        <div class="layadmin-body-shade" layadmin-event="shade"></div>
+    </div>
+</div>
+
+<script th:src="@{/layuiadmin/layui/layui.js}"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use('index');
+
+
+    layui.use(['jquery','element'], function(){
+        var $ = layui.jquery;
+        var element = layui.element;
+        $(function () {
+            $.ajax({
+                url:'/manager/treeMenu',
+                dataType:'json',
+                type:'post',
+                success:function(data){
+                    //先添加所有的主菜单
+                    $.each(data,function(i,obj){
+                        var content='<li class="layui-nav-item">';
+                        content+='<a href="javascript:;"><i class="fa fa-fw '+ obj.icon+'"></i>&nbsp;'+obj.name+'</a>';
+                        //这里是添加所有的子菜单
+                        content+=loadchild(obj);
+                        content+='</li>';
+                        $(".layui-nav-tree").append(content);
+                    });
+                    element.init();
+                }
+            })
+        })
+
+        //组装子菜单的方法
+        function loadchild(obj){
+            if(obj==null){
+                return;
+            }
+            var content='';
+            if(obj.children!=null && obj.children.length>0){
+                content+='<dl class="layui-nav-child">';
+            }else{
+                content+='<dl>';
+            }
+
+            if(obj.children!=null && obj.children.length>0){
+                $.each(obj.children,function(i,note){
+                    if(note.url == "/manager/index"){
+                        content+='<dd>';
+                        content+='<a style="margin-left: 21px" href="'+ note.url+'">'+note.name+'</a>';
+                    }else{
+                        content+='<dd>';
+                        content+='<a style="margin-left: 21px" lay-href="'+ note.url+'">'+note.name+'</a>';
+                    }
+                    if(note.children==null){
+                        return;
+                    }
+                    content+=loadchild(note);
+                    content+='</dd>';
+                });
+
+                content+='</dl>';
+            }
+            return content;
+        }
+    });
+
+</script>
+</body>
+</html>
