@@ -72,4 +72,12 @@
         set username = #{username},email = #{email},phone = #{phone},rid = #{rid},status = #{status}
         where id = #{id}
     </update>
+
+    <select id="selectByName" parameterType="String" resultType="Admin">
+        select <include refid="Base_Column_List" /> from admin where username = #{username}
+    </select>
+
+    <select id="selectByEmail" parameterType="String" resultType="Admin">
+        select <include refid="Base_Column_List" /> from admin where email = #{email}
+    </select>
 </mapper>

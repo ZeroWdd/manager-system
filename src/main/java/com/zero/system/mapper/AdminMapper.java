@@ -26,4 +26,8 @@ public interface AdminMapper {
     int delByAdminIds(List<Integer> ids);
 
     int editByAdmin(Admin admin);
+
+    Admin selectByName(String username);
+
+    Admin selectByEmail(String email);
 }

@@ -60,4 +60,14 @@ public class AdminServiceImpl implements AdminService {
     public int editByAdmin(Admin admin) {
         return adminMapper.editByAdmin(admin);
     }
+
+    @Override
+    public Admin selectByName(String username) {
+        return adminMapper.selectByName(username);
+    }
+
+    @Override
+    public Admin selectByEmail(String email) {
+        return adminMapper.selectByEmail(email);
+    }
 }

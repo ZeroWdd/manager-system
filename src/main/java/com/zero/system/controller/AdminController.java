@@ -40,6 +40,10 @@ public class AdminController {
     @GetMapping("/admin")
     public String admin(HttpSession session){
         //获取角色列表，存入session
+        if(session.getAttribute(Const.ROLE) != null){
+            //如果session已存在role则直接返回
+            return "manager/admin/adminList";
+        }
         List<Role> roleList = roleService.selectAll();
         session.setAttribute(Const.ROLE,roleList);
         return "manager/admin/adminList";
@@ -101,12 +105,20 @@ public class AdminController {
     @PostMapping("/addAdmin")
     @ResponseBody
     public AjaxResult submitAddAdmin(Admin admin,String status){
-        //on 表示通过 null 表示待审核
-        if(status == null){
-            admin.setStatus(0);
-        }else{
-            admin.setStatus(1);
+        if(adminService.selectByName(admin.getUsername()) != null){
+            ajaxResult.ajaxFalse("用户名已存在");
+            return ajaxResult;
         }
+        if(adminService.selectByEmail(admin.getEmail()) != null){
+            ajaxResult.ajaxFalse("邮箱已存在");
+            return ajaxResult;
+        }
+        if(admin.getRid().equals(0)){
+            ajaxResult.ajaxFalse("请选择角色");
+            return ajaxResult;
+        }
+        //on 表示通过 null 表示待审核
+        admin.setStatus(status != null?1:0);
         if(admin.getId() !=null){
             //修改管理员
             int count = adminService.editByAdmin(admin);
@@ -130,6 +142,11 @@ public class AdminController {
         return ajaxResult;
     }
 
+    /**
+     * 删除管理员
+     * @param data
+     * @return
+     */
     @PostMapping("/delAdmin")
     @ResponseBody
     public AjaxResult delAdmin(Data data){

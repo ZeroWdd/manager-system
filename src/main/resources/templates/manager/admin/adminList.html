@@ -146,6 +146,33 @@
                         area: ['500px', '450px'], //宽高
                         content: '/manager/addAdmin'
                     });
+                },
+                batchdel:function () {
+                    var checkAll = table.checkStatus('sreload');
+                    if(checkAll.data.length == 0){
+                        layer.msg('请选择数据进行删除');
+                    }else{
+                        layer.confirm('真的删除行么', function(){
+                            var jsonObj = {};
+                            for(var i=0;i<checkAll.data.length;i++){
+                                jsonObj["ids["+i+"]"] = checkAll.data[i].id;
+                            }
+                            $.ajax({
+                                url:'/manager/delAdmin',
+                                data:jsonObj,
+                                dataType:'json',
+                                type:'post',
+                                success:function (data) {
+                                    if (data.success){
+                                        window.location.reload();
+                                    }else{
+                                        layer.msg(data.message);
+                                    }
+                                }
+                            })
+                        });
+                    }
+
                 }
             };
 
