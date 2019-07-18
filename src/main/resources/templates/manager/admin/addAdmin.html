@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加管理员</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+</head>
+<body>
+    <div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 0;">
+        <input type="hidden" name="id" th:if="${admin}" th:value="${admin.id}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">登录名</label>
+            <div class="layui-input-inline">
+                <input th:value="${admin != null}?${admin.username}:''" type="text" name="username" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机</label>
+            <div class="layui-input-inline">
+                <input th:value="${admin != null}?${admin.phone}:''" type="text" name="phone" lay-verify="phone" placeholder="请输入号码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input th:value="${admin != null}?${admin.email}:''" type="text" name="email" lay-verify="email" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色</label>
+            <div class="layui-input-inline">
+                <select name="rid">
+                    <option th:if="${admin == null}" value="0">请选择角色</option>
+                    <option th:each="role : ${session.role}" th:value="${role.id}" th:text="${role.name}" th:selected="${admin != null and admin.rid == role.id}"> </option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">审核状态</label>
+            <div class="layui-input-inline">
+                <input th:checked="${admin !=null and admin.status == 1}?true:false" type="checkbox" value="1" name="status" lay-skin="switch" lay-text="通过|待审核">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="addadmin">立即添加</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/layuiadmin/layui/layui.js}"></script>
+    <script>
+        layui.config({
+            base: '/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'form'], function(){
+            var $ = layui.$
+                ,form = layui.form ;
+        });
+
+        layui.use(['form','jquery'], function () {
+            var form = layui.form;
+            var $ = layui.jquery;
+            form.on('submit(addadmin)',function (data) {
+                $.ajax({
+                    url:'/manager/addAdmin',
+                    data:data.field,
+                    dataType:'json',
+                    type:'post',
+                    success:function (data) {
+                        if (data.success){
+                            layer.msg(data.message);
+                            layer.alert(data.message,function(){
+                                window.parent.location.reload();//刷新父页面
+                                parent.layer.close(index);//关闭弹出层
+                            });
+                        }else{
+                            layer.msg(data.message);
+                        }
+                    }
+                })
+                return false;
+            })
+        });
+
+
+    </script>
+</body>
+</html>

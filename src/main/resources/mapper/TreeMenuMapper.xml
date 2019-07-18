@@ -14,9 +14,8 @@
 
     <select id="selectByAdminId" parameterType="int" resultMap="BaseResultMap">
         select treemenu.id,treemenu.pid,treemenu.name,treemenu.icon,treemenu.url
-        from admin,admin_role,role,role_treemenu,treemenu
-        where admin.id = admin_role.aid
-        and role.id = admin_role.rid
+        from admin,role,role_treemenu,treemenu
+        where admin.rid = role.id
         and role.id = role_treemenu.rid
         and treemenu.id = role_treemenu.tid
         and admin.id = #{id}

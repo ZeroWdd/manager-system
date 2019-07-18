@@ -5,6 +5,7 @@
     <title>管理员列表</title>
     <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
+    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
 </head>
 <body>
     <div class="layui-fluid">
@@ -29,8 +30,17 @@
                             <input type="text" id="email" name="email" placeholder="请输入" autocomplete="off" class="layui-input">
                         </div>
                     </div>
+                    <div class="layui-inline" style="width: 250px">
+                        <label class="layui-form-label">角色</label>
+                        <div class="layui-input-block">
+                            <select name="rid" class="select">
+                                <option value="0">请选择角色</option>
+                                <option th:each="role : ${session.role}" th:value="${role.id}" th:text="${role.name}"> </option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="layui-inline">
-                        <button class="layui-btn layuiadmin-btn-admin" id="stable" data-type="search_table">
+                        <button class="layui-btn layuiadmin-btn-admin" data-type="search_table">
                             <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                         </button>
                     </div>
@@ -53,9 +63,9 @@
                     {{#  } }}
                 </script>
                 <script type="text/html" id="table_admin">
-                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-                    <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="fa fa-pencil"></i>编辑</a>
+<!--                    <a class="layui-btn layui-btn-success layui-btn-xs" lay-event="select"><i class="fa fa-eye"></i>详情</a>-->
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="fa fa-trash-o"></i>删除</a>
                 </script>
             </div>
         </div>
@@ -87,11 +97,19 @@
                     {type: 'checkbox', fixed: 'left'},
                     {field: 'id', title: '编号', width:70},
                     {field: 'username', title: '用户名', width:150},
-                    {field: 'phone', title: '手机', width: 150},
+                    {field: 'phone', title: '手机', width: 130},
                     {field: 'email', title: '邮箱', width:200},
+                    {field: 'roleName', title: '角色', width:120},
                     {field: 'createtime', title: '创建时间', width: 150},
-                    {field: 'judge', title: '审核状态', width: 120},
-                    {fixed: 'right', width: 340, align:'center', toolbar: '#table_admin'}
+                    {field: 'status', title: '审核状态', width: 120,
+                        templet:function (row) {
+                            if (row.status == 1){
+                                return '<a class="layui-btn layui-btn-success layui-btn-xs">审核通过</a>';
+                            }else{
+                                return '<a class="layui-btn layui-btn-success layui-btn-xs">未审核</a>';
+                            }
+                        }},
+                    {fixed: 'right',title:'操作', width: 240, align:'center', toolbar: '#table_admin'}
                     ]
                 ],
                 //用于搜索结果重载
@@ -103,6 +121,7 @@
                     var username = $('#username');
                     var phone = $('#phone');
                     var email = $('#email');
+                    var rid = $(".select option:selected");
                     //执行重载
                     table.reload('sreload', {
                         //一定要加不然乱码
@@ -114,16 +133,70 @@
                             //表示传到后台的参数
                             username: username.val(),
                             phone: phone.val(),
-                            email: email.val()
+                            email: email.val(),
+                            rid : rid.val()
                         }
+                    });
+                },
+                add: function() {
+                    layer.open({
+                        type: 2,
+                        title: '添加管理员',
+                        skin: 'layui-layer-demo', //加上边框
+                        area: ['500px', '450px'], //宽高
+                        content: '/manager/addAdmin'
                     });
                 }
             };
 
-            $('#stable').on('click', function(){
+            $('.layui-btn.layuiadmin-btn-admin').on('click', function(){
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
             });
+
+            table.on('tool(table)', function(obj){ //注：tool 是工具条事件名，table 是 table 原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值
+                if(layEvent === 'edit'){
+                    edit(data);
+                } else if(layEvent === 'del'){
+                    layer.confirm('真的删除行么', function(index){
+                        del(data,obj,index);
+                    });
+                } else if(layEvent === 'edit'){
+                    edit(data);
+                }
+            });
+
+            function edit(data) {
+                layer.open({
+                    type: 2,
+                    title: '修改管理员信息',
+                    skin: 'layui-layer-demo', //加上边框
+                    area: ['500px', '450px'], //宽高
+                    method: 'post',
+                    content: '/manager/addAdmin?type=edit&id='+data.id
+                });
+            }
+            //后边两个参数仅仅是因为要执行动态删除dom
+            function del(data,obj,index){
+                var jsonObj = {};
+                jsonObj["ids[0]"] = data.id;
+                $.ajax({
+                    url:'/manager/delAdmin',
+                    data:jsonObj,
+                    dataType:'json',
+                    type:'post',
+                    success:function (data) {
+                        if (data.success){
+                            obj.del(); //删除对应行（tr）的DOM结构
+                            layer.close(index);
+                        }else{
+                            layer.msg(data.message);
+                        }
+                    }
+                })
+            }
 
         });
 

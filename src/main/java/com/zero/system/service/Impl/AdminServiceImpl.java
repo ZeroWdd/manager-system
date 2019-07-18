@@ -40,4 +40,24 @@ public class AdminServiceImpl implements AdminService {
         pageBean.setTotalsize(totalsize);
         return pageBean;
     }
+
+    @Override
+    public int insertAdmin(Admin admin) {
+        return adminMapper.insertAdmin(admin);
+    }
+
+    @Override
+    public Admin selectById(Integer id) {
+        return adminMapper.selectById(id);
+    }
+
+    @Override
+    public int delByAdminIds(List<Integer> ids) {
+        return adminMapper.delByAdminIds(ids);
+    }
+
+    @Override
+    public int editByAdmin(Admin admin) {
+        return adminMapper.editByAdmin(admin);
+    }
 }

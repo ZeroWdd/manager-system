@@ -18,4 +18,12 @@ public interface AdminMapper {
     List<Admin> queryList(Map<String, Object> paramMap);
 
     Integer queryCount(Map<String, Object> paramMap);
+
+    int insertAdmin(Admin admin);
+
+    Admin selectById(Integer id);
+
+    int delByAdminIds(List<Integer> ids);
+
+    int editByAdmin(Admin admin);
 }

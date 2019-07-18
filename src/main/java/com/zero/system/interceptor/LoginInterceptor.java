@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String contextPath = request.getRequestURI();
         if(!StringUtils.isEmpty(request.getSession().getAttribute(Const.ADMIN))){
             return true;
         }
