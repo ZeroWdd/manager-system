@@ -1,7 +1,9 @@
 package com.zero.system.controller;
 
 import com.zero.system.entity.Admin;
+import com.zero.system.entity.Role;
 import com.zero.system.service.AdminService;
+import com.zero.system.service.RoleService;
 import com.zero.system.util.AjaxResult;
 import com.zero.system.util.Const;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @Classname DispatherController
@@ -29,6 +32,8 @@ public class DispatherController {
 
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private RoleService roleService;
 
     /**
      * 跳转登录界面
@@ -63,6 +68,12 @@ public class DispatherController {
             }else{
                 session.setAttribute(Const.ADMIN,ad);
                 ajaxResult.ajaxTrue("登录成功");
+
+                //获取角色列表，存入session
+                if(session.getAttribute(Const.ROLE) == null){
+                    List<Role> roleList = roleService.selectAll();
+                    session.setAttribute(Const.ROLE,roleList);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

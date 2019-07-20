@@ -1,7 +1,6 @@
 package com.zero.system.controller;
 
 import com.zero.system.entity.Admin;
-import com.zero.system.entity.Role;
 import com.zero.system.service.AdminService;
 import com.zero.system.service.RoleService;
 import com.zero.system.util.*;
@@ -11,9 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,14 +35,7 @@ public class AdminController {
      * @return
      */
     @GetMapping("/admin")
-    public String admin(HttpSession session){
-        //获取角色列表，存入session
-        if(session.getAttribute(Const.ROLE) != null){
-            //如果session已存在role则直接返回
-            return "manager/admin/adminList";
-        }
-        List<Role> roleList = roleService.selectAll();
-        session.setAttribute(Const.ROLE,roleList);
+    public String admin(){
         return "manager/admin/adminList";
     }
 
