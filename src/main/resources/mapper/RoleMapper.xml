@@ -13,5 +13,47 @@
         select <include refid="Base_Column_List" /> from role;
     </select>
 
+    <select id="queryList" resultMap="BaseResultMap" >
+        <!-- 根据条件查询 所有信息 -->
+        select
+        <include refid="Base_Column_List" />
+        from role
+        <where>
+            <if test="rid!=null"> and role.id = #{rid} </if>
+        </where>
+        limit #{startIndex},#{pagesize}
+    </select>
 
+    <select id="queryCount" resultType="int" >
+        select count(*) from role
+        <where>
+            <if test="rid!=null"> and role.id = #{rid} </if>
+        </where>
+    </select>
+
+    <delete id="delByRoleIds" parameterType="java.util.List">
+        delete from role where id in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectById" parameterType="int" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from role where id = #{id}
+    </select>
+
+    <select id="selectByName" parameterType="String" resultType="Role">
+        select <include refid="Base_Column_List" /> from role where name = #{name}
+    </select>
+
+    <insert id="insertRole" parameterType="Role">
+        insert into role(name)
+        values (#{name})
+    </insert>
+
+    <update id="editByRole" parameterType="Role">
+        update role
+        set name = #{name}
+        where id = #{id}
+    </update>
 </mapper>

@@ -43,22 +43,14 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block">
-                <button class="layui-btn" lay-submit="" lay-filter="addadmin">立即添加</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button th:text="${admin != null}?'立即修改':'立即添加'" class="layui-btn" lay-submit="" lay-filter="addadmin">立即添加</button>
+                <button th:if="${admin == null}" type="reset" id="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </div>
     </div>
 
     <script th:src="@{/layuiadmin/layui/layui.js}"></script>
     <script>
-        layui.config({
-            base: '/layuiadmin/' //静态资源所在路径
-        }).extend({
-            index: 'lib/index' //主入口模块
-        }).use(['index', 'form'], function(){
-            var $ = layui.$
-                ,form = layui.form ;
-        });
 
         layui.use(['form','jquery'], function () {
             var form = layui.form;
@@ -80,9 +72,15 @@
                             layer.msg(data.message);
                         }
                     }
-                })
+                });
                 return false;
             })
+
+            //重置
+            $("#reset").click(function () {
+                $("input").val("");
+            })
+
         });
 
 

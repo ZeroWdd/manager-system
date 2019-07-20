@@ -105,14 +105,8 @@ public class AdminController {
     @PostMapping("/addAdmin")
     @ResponseBody
     public AjaxResult submitAddAdmin(Admin admin,String status){
-        if(adminService.selectByName(admin.getUsername()) != null){
-            ajaxResult.ajaxFalse("用户名已存在");
-            return ajaxResult;
-        }
-        if(adminService.selectByEmail(admin.getEmail()) != null){
-            ajaxResult.ajaxFalse("邮箱已存在");
-            return ajaxResult;
-        }
+        Admin byName = adminService.selectByName(admin.getUsername());
+        Admin byEmail = adminService.selectByEmail(admin.getEmail());
         if(admin.getRid().equals(0)){
             ajaxResult.ajaxFalse("请选择角色");
             return ajaxResult;
@@ -121,15 +115,34 @@ public class AdminController {
         admin.setStatus(status != null?1:0);
         if(admin.getId() !=null){
             //修改管理员
+            if(byName != null && !byName.getId().equals(admin.getId())){
+                //与修改用户名一样，但存在数据库中，表示后来改的用户名已存在
+                ajaxResult.ajaxFalse("用户名已存在");
+                return ajaxResult;
+            }
+            if(byEmail != null && !byEmail.getId().equals(admin.getId())){
+                //与修改邮箱一样，但存在数据库中，表示后来改的邮箱已存在
+                ajaxResult.ajaxFalse("用户名已存在");
+                return ajaxResult;
+            }
             int count = adminService.editByAdmin(admin);
             if(count > 0){
                 ajaxResult.ajaxTrue("修改成功");
             }else{
                 ajaxResult.ajaxFalse("修改失败");
             }
-
         }else{
             //添加管理员
+            if(byName != null){
+                //与原用户名不一样，但存在数据库中，表示后来改的用户名已存在
+                ajaxResult.ajaxFalse("用户名已存在");
+                return ajaxResult;
+            }
+            if(byEmail != null){
+                //与原邮箱不一样，但存在数据库中，表示后来改的邮箱已存在
+                ajaxResult.ajaxFalse("邮箱已存在");
+                return ajaxResult;
+            }
             String stringDate = DateUtil.getStringDate("yyyy-MM-dd");
             admin.setCreatetime(stringDate);
             int count = adminService.insertAdmin(admin);

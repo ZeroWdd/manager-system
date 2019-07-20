@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>管理员列表</title>
+    <title>角色列表</title>
     <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
     <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
@@ -12,24 +12,6 @@
         <div class="layui-card">
             <div class="layui-form layui-card-header layuiadmin-card-header-auto">
                 <div class="layui-form-item">
-                    <div class="layui-inline" style="width: 250px">
-                        <label class="layui-form-label">登录名</label>
-                        <div class="layui-input-block">
-                            <input type="text" id="username" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline" style="width: 250px">
-                        <label class="layui-form-label">手机</label>
-                        <div class="layui-input-block">
-                            <input type="text" id="phone" name="phone" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline" style="width: 250px">
-                        <label class="layui-form-label">邮箱</label>
-                        <div class="layui-input-block">
-                            <input type="text" id="email" name="email" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
                     <div class="layui-inline" style="width: 250px">
                         <label class="layui-form-label">角色</label>
                         <div class="layui-input-block">
@@ -49,24 +31,20 @@
 
             <div class="layui-card-body">
                 <div style="padding-bottom: 10px;">
-                    <button class="layui-btn layuiadmin-btn-admin" data-type="batchdel">删除</button>
                     <button class="layui-btn layuiadmin-btn-admin" data-type="add">添加</button>
                 </div>
 
                 <table id="table" lay-filter="table"></table>
-
 
             </div>
         </div>
     </div>
 
     <script th:src="@{/layuiadmin/layui/layui.js}"></script>
-
     <script type="text/html" id="table_admin">
-    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="fa fa-pencil"></i>编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="fa fa-trash-o"></i>删除</a>
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="fa fa-pencil"></i>编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="fa fa-trash-o"></i>删除</a>
     </script>
-
     <script>
 
         layui.use(['jquery','layer', 'table'], function(){
@@ -77,7 +55,7 @@
             table.render({
                 elem: '#table',
                 height: 450,
-                url: '/manager/adminList', //数据接口
+                url: '/manager/roleList', //数据接口
                 title: '用户列表',
                 page: true,
                 limit: 5,
@@ -86,20 +64,8 @@
                     [ //表头
                     {type: 'checkbox', fixed: 'left'},
                     {field: 'id', title: '编号', width:70},
-                    {field: 'username', title: '用户名', width:150},
-                    {field: 'phone', title: '手机', width: 130},
-                    {field: 'email', title: '邮箱', width:200},
-                    {field: 'roleName', title: '角色', width:120},
-                    {field: 'createtime', title: '创建时间', width: 150},
-                    {field: 'status', title: '审核状态', width: 120,
-                        templet:function (row) {
-                            if (row.status == 1){
-                                return '<a class="layui-btn layui-btn-success layui-btn-xs">审核通过</a>';
-                            }else{
-                                return '<a class="layui-btn layui-btn-success layui-btn-xs">未审核</a>';
-                            }
-                        }},
-                    {fixed: 'right',title:'操作', width: 240, align:'center', toolbar: '#table_admin'}
+                    {field: 'name', title: '名称', width:200},
+                    {fixed: 'right',title:'操作', width: 240, toolbar: '#table_admin'}
                     ]
                 ],
                 //用于搜索结果重载
@@ -108,9 +74,6 @@
 
             var active = {
                 search_table: function(){
-                    var username = $('#username');
-                    var phone = $('#phone');
-                    var email = $('#email');
                     var rid = $(".select option:selected");
                     //执行重载
                     table.reload('sreload', {
@@ -121,9 +84,6 @@
                         }
                         ,where: {
                             //表示传到后台的参数
-                            username: username.val(),
-                            phone: phone.val(),
-                            email: email.val(),
                             rid : rid.val()
                         }
                     });
@@ -134,35 +94,8 @@
                         title: '添加管理员',
                         skin: 'layui-layer-demo', //加上边框
                         area: ['500px', '450px'], //宽高
-                        content: '/manager/addAdmin'
+                        content: '/manager/addRole'
                     });
-                },
-                batchdel:function () {
-                    var checkAll = table.checkStatus('sreload');
-                    if(checkAll.data.length == 0){
-                        layer.msg('请选择数据进行删除');
-                    }else{
-                        layer.confirm('真的删除行么', function(){
-                            var jsonObj = {};
-                            for(var i=0;i<checkAll.data.length;i++){
-                                jsonObj["ids["+i+"]"] = checkAll.data[i].id;
-                            }
-                            $.ajax({
-                                url:'/manager/delAdmin',
-                                data:jsonObj,
-                                dataType:'json',
-                                type:'post',
-                                success:function (data) {
-                                    if (data.success){
-                                        window.location.reload();
-                                    }else{
-                                        layer.msg(data.message);
-                                    }
-                                }
-                            })
-                        });
-                    }
-
                 }
             };
 
@@ -190,7 +123,7 @@
                     skin: 'layui-layer-demo', //加上边框
                     area: ['500px', '450px'], //宽高
                     method: 'post',
-                    content: '/manager/addAdmin?type=edit&id='+data.id
+                    content: '/manager/addRole?type=edit&id='+data.id
                 });
             }
             //后边两个参数仅仅是因为要执行动态删除dom
@@ -198,7 +131,7 @@
                 var jsonObj = {};
                 jsonObj["ids[0]"] = data.id;
                 $.ajax({
-                    url:'/manager/delAdmin',
+                    url:'/manager/delRole',
                     data:jsonObj,
                     dataType:'json',
                     type:'post',
