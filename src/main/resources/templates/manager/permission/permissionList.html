@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>权限列表</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
+    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+
+        <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+                <button class="layui-btn layuiadmin-btn-admin" data-type="batchdel">删除</button>
+                <button class="layui-btn layuiadmin-btn-admin" data-type="add">添加</button>
+            </div>
+            <form class="layui-form">
+                <div id="xtree1" style="width:400px;border:1px solid black;padding: 10px 0 25px 5px;"></div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/layuiadmin/layui/layui.js}"></script>
+<script th:src="@{/layuiadmin/layui-xtree/layui-xtree.js}"></script>
+
+<script>
+
+    layui.use(['form','jquery'], function(){
+        var $ = layui.jquery;
+        var form = layui.form;
+        var xtree1 = null;
+        $.ajax({
+            url:'/manager/permissionList',
+            dataType:'json',
+            type:'post',
+            success:function (data) {
+                xtree1 = new layuiXtree({
+                    elem: 'xtree1'   //(必填) 放置xtree的容器id，不要带#号
+                    , form: form     //(必填) layui 的 from
+                    , data: data     //(必填) json数组（数据格式在下面）
+                });
+            }
+        });
+
+        var active = {
+            batchdel:function () {
+                console.log(xtree1.GetParent('控制面板'));
+                console.log(xtree1.GetParent('用户列表'));
+                console.log(xtree1.GetChecked());
+
+            }
+        }
+
+        $('.layui-btn.layuiadmin-btn-admin').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+
+</script>
+</body>
+</html>

@@ -8,6 +8,13 @@
         <result column="icon" jdbcType="VARCHAR" property="icon" />
         <result column="url" jdbcType="VARCHAR" property="url" />
     </resultMap>
+    <resultMap id="PermissionMap" type="com.zero.system.entity.Permission">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="pid" jdbcType="INTEGER" property="pid"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="value" jdbcType="VARCHAR" property="value"/>
+    </resultMap>
     <sql id="Base_Column_List">
         id,pid,name,icon,url
     </sql>
@@ -19,6 +26,11 @@
         and role.id = role_treemenu.rid
         and treemenu.id = role_treemenu.tid
         and admin.id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="PermissionMap">
+        select treemenu.id,treemenu.pid,treemenu.name as title,treemenu.name as value,treemenu.url
+        from treemenu
     </select>
 
 </mapper>

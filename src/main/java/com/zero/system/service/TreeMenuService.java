@@ -1,5 +1,6 @@
 package com.zero.system.service;
 
+import com.zero.system.entity.Permission;
 import com.zero.system.entity.TreeMenu;
 
 import java.util.List;
@@ -13,4 +14,8 @@ import java.util.List;
 public interface TreeMenuService {
 
     List<TreeMenu> selectByAdminId(Integer id);
+
+
+    List<Permission> selectAll();
+
 }

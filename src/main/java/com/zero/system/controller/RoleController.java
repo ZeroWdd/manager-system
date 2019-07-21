@@ -82,6 +82,13 @@ public class RoleController {
         return ajaxResult;
     }
 
+    /**
+     * 跳转添加角色页面
+     * @param type
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/addRole")
     public String addRole(String type, Integer id, Model model){
         if(type != null && type.equals("edit")){
@@ -92,6 +99,11 @@ public class RoleController {
     }
 
 
+    /**
+     * 添加角色
+     * @param role
+     * @return
+     */
     @PostMapping("/addRole")
     @ResponseBody
     public AjaxResult submitAddRole(Role role){

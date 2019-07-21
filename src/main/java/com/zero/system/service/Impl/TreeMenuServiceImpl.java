@@ -1,5 +1,6 @@
 package com.zero.system.service.Impl;
 
+import com.zero.system.entity.Permission;
 import com.zero.system.entity.TreeMenu;
 import com.zero.system.mapper.TreeMenuMapper;
 import com.zero.system.service.TreeMenuService;
@@ -44,6 +45,25 @@ public class TreeMenuServiceImpl implements TreeMenuService {
         return root;
     }
 
+    @Override
+    public List<Permission> selectAll() {
+        List<Permission> permissionList = treeMenuMapper.selectAll();
+        List<Permission> root = new ArrayList<>();
+        for(Permission permission : permissionList){
+            //pid为0,则为父(主)菜单
+            if(permission.getPid() == 0){
+                root.add(permission);
+            }
+        }
+        for(Permission permission : root){
+            //获取所有子菜单 递归
+            List<Permission> childrenList = getchildrenPermisson(permission.getId(),permissionList);
+            //这个是实体类中的子菜单集合
+            permission.setData(childrenList);
+        }
+        return root;
+    }
+
 
     //递归获取子菜单
     public List<TreeMenu> getchildrenMeun(int id,List<TreeMenu> allMeun){
@@ -60,6 +80,30 @@ public class TreeMenuServiceImpl implements TreeMenuService {
         //这里就是递归了，遍历所有的子菜单
         for (TreeMenu info:childrenList){
             info.setChildren(getchildrenMeun(info.getId(),allMeun));
+        }
+
+        //如果子菜单为空的话，那就说明某菜单下没有子菜单了，直接返回空,子菜单为空的话就不会继续
+        //迭代了
+        if(childrenList!=null && childrenList.size()==0){
+            return null;
+        }
+        return  childrenList;
+    }
+
+    public List<Permission> getchildrenPermisson(int id,List<Permission> allPermission){
+        //用于保存子菜单
+        List<Permission> childrenList=new ArrayList<>();
+        for (Permission info: allPermission){
+            //判断当前的菜单标识是否等于主菜单的id
+            if(info.getPid()==id){
+                //如果是的话 就放入主菜单对象的子菜单集合
+                childrenList.add(info);
+            }
+        }
+
+        //这里就是递归了，遍历所有的子菜单
+        for (Permission info:childrenList){
+            info.setData(getchildrenPermisson(info.getId(),allPermission));
         }
 
         //如果子菜单为空的话，那就说明某菜单下没有子菜单了，直接返回空,子菜单为空的话就不会继续
