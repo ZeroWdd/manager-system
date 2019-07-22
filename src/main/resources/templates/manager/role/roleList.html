@@ -97,7 +97,7 @@
                         area: ['500px', '450px'], //宽高
                         content: '/manager/addRole'
                     });
-                }
+                },
             };
 
             $('.layui-btn.layuiadmin-btn-admin').on('click', function(){
@@ -114,6 +114,8 @@
                     layer.confirm('真的删除行么', function(index){
                         del(data,obj,index);
                     });
+                }else if(layEvent === 'allot'){
+                    allot(data);
                 }
             });
 
@@ -145,6 +147,16 @@
                         }
                     }
                 })
+            }
+
+            function allot(data) {
+                layer.open({
+                    type: 2,
+                    title: '添加管理员',
+                    skin: 'layui-layer-demo', //加上边框
+                    area: ['700px', '450px'], //宽高
+                    content: '/manager/allotPer?id='+data.id
+                });
             }
 
         });

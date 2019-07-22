@@ -137,4 +137,10 @@ public class RoleController {
         }
         return ajaxResult;
     }
+
+    @GetMapping("/allotPer")
+    public String allotPer(Integer id,Model model){
+        model.addAttribute("id",id);
+        return "/manager/role/allotPer";
+    }
 }

@@ -99,8 +99,27 @@
         </foreach>
     </delete>
 
+    <delete id="delRolePermissionByRid" parameterType="int">
+        delete from role_treemenu where rid = #{id}
+    </delete>
+
     <select id="selectByPid" resultMap="BaseResultMap">
         select *
         from treemenu where pid = #{id}
     </select>
+
+    <select id="selectByRoleId" resultMap="BaseResultMap">
+        select treemenu.id,treemenu.pid,treemenu.name,treemenu.icon,treemenu.url
+        from role,role_treemenu,treemenu
+        where role.id = role_treemenu.rid and treemenu.id = role_treemenu.tid and role.id = #{id}
+    </select>
+
+    <insert id="updateRolePermission">
+        insert into role_treemenu(rid,tid) values
+        <foreach collection="ids" index="index" item="tid" separator=","  >
+            (#{id},#{tid})
+        </foreach>
+    </insert>
+
+
 </mapper>

@@ -87,6 +87,18 @@ public class TreeMenuServiceImpl implements TreeMenuService {
         return treeMenuMapper.selectByPid(id);
     }
 
+    @Override
+    public List<TreeMenu> selectByRoleId(Integer id) {
+        return treeMenuMapper.selectByRoleId(id);
+    }
+
+    @Override
+    @Transactional
+    public int updateRolePermission(List<Integer> ids, Integer id) {
+        treeMenuMapper.delRolePermissionByRid(id);
+        return treeMenuMapper.updateRolePermission(ids,id);
+    }
+
 
     //递归获取子菜单
     public List<TreeMenu> getchildrenMeun(int id,List<TreeMenu> allMeun){

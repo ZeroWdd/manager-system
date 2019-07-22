@@ -20,6 +20,8 @@ public class TreeMenu {
 
     private String url;
 
+    private Boolean checked = false;
+
     //添加元素
     private List<TreeMenu> children = new ArrayList<>();
 
@@ -69,5 +71,13 @@ public class TreeMenu {
 
     public void setChildren(List<TreeMenu> children) {
         this.children = children;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
     }
 }

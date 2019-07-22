@@ -1,6 +1,7 @@
 package com.zero.system.mapper;
 
 import com.zero.system.entity.TreeMenu;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -30,4 +31,10 @@ public interface TreeMenuMapper {
     void delRolePermission(List<Integer> ids);
 
     List<TreeMenu> selectByPid(Integer id);
+
+    List<TreeMenu> selectByRoleId(Integer id);
+
+    int updateRolePermission(@Param("ids") List<Integer> ids, @Param("id") Integer id);
+
+    void delRolePermissionByRid(Integer id);
 }

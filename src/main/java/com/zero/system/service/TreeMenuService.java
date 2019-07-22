@@ -30,4 +30,8 @@ public interface TreeMenuService {
     int delByPermissionIds(List<Integer> ids);
 
     List<TreeMenu> selectByPid(Integer id);
+
+    List<TreeMenu> selectByRoleId(Integer id);
+
+    int updateRolePermission(List<Integer> ids, Integer id);
 }

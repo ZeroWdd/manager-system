@@ -53,8 +53,18 @@ public class PermissionController {
      */
     @GetMapping("/permissionList")
     @ResponseBody
-    public Object permissionList(HttpSession session){
+    public Object permissionList(HttpSession session,Integer id){
         List<TreeMenu> treeMenuList = treeMenuService.selectAll();
+        if(id != null){
+            List<TreeMenu> atList = treeMenuService.selectByRoleId(id);
+            for(TreeMenu info : treeMenuList){
+                for(TreeMenu at : atList){
+                    if(info.getId().equals(at.getId())){
+                        info.setChecked(true);
+                    }
+                }
+            }
+        }
         HashMap<String, Object> rest = new HashMap<>();
         rest.put("code",0);
         rest.put("msg","ok");
@@ -134,6 +144,11 @@ public class PermissionController {
         return ajaxResult;
     }
 
+    /**
+     * 删除权限
+     * @param data
+     * @return
+     */
     @PostMapping("/delPermission")
     @ResponseBody
     public AjaxResult delPermission(Data data){
@@ -147,6 +162,16 @@ public class PermissionController {
             ajaxResult.ajaxTrue("删除成功");
         }else{
             ajaxResult.ajaxFalse("删除失败");
+        }
+        return ajaxResult;
+    }
+
+    @PostMapping("/allotPer")
+    @ResponseBody
+    public AjaxResult allotPre(Data data,Integer id){
+        int count = treeMenuService.updateRolePermission(data.getIds(),id);
+        if(count >= data.getIds().size()){
+            ajaxResult.ajaxTrue("分配成功");
         }
         return ajaxResult;
     }

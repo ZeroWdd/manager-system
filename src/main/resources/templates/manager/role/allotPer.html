@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>权限列表</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
+    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <!--tree插件-->
+    <link rel="stylesheet" th:href="@{/layuiadmin/extend/treetable/treetable.css}">
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="table1" class="layui-table" lay-filter="table1"></table>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div style="padding-bottom: 10px;">
+            <button class="layui-btn layuiadmin-btn-admin" data-type="add">添加</button>
+            <button class="layui-btn layuiadmin-btn-admin" data-type="">重置</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/layuiadmin/layui/layui.js}"></script>
+<script th:src="@{/layuiadmin/extend/treetable/treetable.js}"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    layui.config({
+        base: '/layuiadmin/extend/'
+    }).extend({
+        treetable: 'treetable/treetable'
+    }).use(['treetable','table','jquery'], function () {
+        var treetable = layui.treetable;
+        var table = layui.table;
+        var $ = layui.jquery;
+
+        treetable =  $.extend(table, {config: {checkName: 'checked'}});
+        // 渲染表格
+        treetable.render({
+            treeColIndex: 2,          // treetable新增参数
+            treeSpid: -1,             // treetable新增参数
+            treeIdName: 'd_id',       // treetable新增参数
+            treePidName: 'd_pid',     // treetable新增参数
+            treeDefaultClose: true,   // treetable新增参数
+            treeLinkage: true,        // treetable新增参数
+            elem: '#table1',
+            url: '/manager/permissionList?id='+[[${id}]],
+            cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'},
+                    {type: 'numbers'},
+                    {field: 'name', title: '名称'},
+                    {field: 'url', title: '路径'}
+                ]
+            ]
+        });
+
+
+        var active = {
+            add:function () {
+                var checkAll = table.checkStatus('table1');
+                var jsonObj = {};
+                for(var i=0;i<checkAll.data.length;i++){
+                    jsonObj["ids["+i+"]"] = checkAll.data[i].id;
+                }
+                jsonObj["id"] = [[${id}]];
+                $.ajax({
+                    url:'/manager/allotPer',
+                    data:jsonObj,
+                    dataType:'json',
+                    type:'post',
+                    success:function (data) {
+                        if (data.success){
+                            window.location.reload();
+                        }else{
+                            layer.msg(data.message);
+                        }
+                    }
+                })
+            }
+        }
+
+        $('.layui-btn.layuiadmin-btn-admin').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+
+    /*]]>*/
+</script>
+</body>
+</html>
