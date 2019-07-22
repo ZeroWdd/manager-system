@@ -1,11 +1,11 @@
 package com.zero.system.service.Impl;
 
-import com.zero.system.entity.Permission;
 import com.zero.system.entity.TreeMenu;
 import com.zero.system.mapper.TreeMenuMapper;
 import com.zero.system.service.TreeMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class TreeMenuServiceImpl implements TreeMenuService {
         //遍历所有菜单集合,如果是主菜单的话直接放入root集合
         for(TreeMenu treeMenu : treeMenuList){
             //pid为0,则为父(主)菜单
-            if(treeMenu.getPid() == 0){
+            if(treeMenu.getPid() == -1){
                 root.add(treeMenu);
             }
         }
@@ -46,22 +46,45 @@ public class TreeMenuServiceImpl implements TreeMenuService {
     }
 
     @Override
-    public List<Permission> selectAll() {
-        List<Permission> permissionList = treeMenuMapper.selectAll();
-        List<Permission> root = new ArrayList<>();
-        for(Permission permission : permissionList){
-            //pid为0,则为父(主)菜单
-            if(permission.getPid() == 0){
-                root.add(permission);
-            }
-        }
-        for(Permission permission : root){
-            //获取所有子菜单 递归
-            List<Permission> childrenList = getchildrenPermisson(permission.getId(),permissionList);
-            //这个是实体类中的子菜单集合
-            permission.setData(childrenList);
-        }
-        return root;
+    public List<TreeMenu> selectAll() {
+        return treeMenuMapper.selectAll();
+    }
+
+    @Override
+    public TreeMenu selectById(Integer id) {
+        return treeMenuMapper.selectById(id);
+    }
+
+    @Override
+    public TreeMenu selectByName(String name) {
+        return treeMenuMapper.selectByName(name);
+    }
+
+    @Override
+    public TreeMenu selectByUrl(String url) {
+        return treeMenuMapper.selectByUrl(url);
+    }
+
+    @Override
+    public int editByPermission(TreeMenu treeMenu) {
+        return treeMenuMapper.editByPermission(treeMenu);
+    }
+
+    @Override
+    public int insertPermission(TreeMenu treeMenu) {
+        return treeMenuMapper.insertPermission(treeMenu);
+    }
+
+    @Override
+    @Transactional
+    public int delByPermissionIds(List<Integer> ids) {
+        treeMenuMapper.delRolePermission(ids);
+        return treeMenuMapper.delByPermissionIds(ids);
+    }
+
+    @Override
+    public List<TreeMenu> selectByPid(Integer id) {
+        return treeMenuMapper.selectByPid(id);
     }
 
 
@@ -90,27 +113,4 @@ public class TreeMenuServiceImpl implements TreeMenuService {
         return  childrenList;
     }
 
-    public List<Permission> getchildrenPermisson(int id,List<Permission> allPermission){
-        //用于保存子菜单
-        List<Permission> childrenList=new ArrayList<>();
-        for (Permission info: allPermission){
-            //判断当前的菜单标识是否等于主菜单的id
-            if(info.getPid()==id){
-                //如果是的话 就放入主菜单对象的子菜单集合
-                childrenList.add(info);
-            }
-        }
-
-        //这里就是递归了，遍历所有的子菜单
-        for (Permission info:childrenList){
-            info.setData(getchildrenPermisson(info.getId(),allPermission));
-        }
-
-        //如果子菜单为空的话，那就说明某菜单下没有子菜单了，直接返回空,子菜单为空的话就不会继续
-        //迭代了
-        if(childrenList!=null && childrenList.size()==0){
-            return null;
-        }
-        return  childrenList;
-    }
 }

@@ -8,13 +8,6 @@
         <result column="icon" jdbcType="VARCHAR" property="icon" />
         <result column="url" jdbcType="VARCHAR" property="url" />
     </resultMap>
-    <resultMap id="PermissionMap" type="com.zero.system.entity.Permission">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="pid" jdbcType="INTEGER" property="pid"/>
-        <result column="url" jdbcType="VARCHAR" property="url"/>
-        <result column="title" jdbcType="VARCHAR" property="title"/>
-        <result column="value" jdbcType="VARCHAR" property="value"/>
-    </resultMap>
     <sql id="Base_Column_List">
         id,pid,name,icon,url
     </sql>
@@ -28,9 +21,86 @@
         and admin.id = #{id}
     </select>
 
-    <select id="selectAll" resultMap="PermissionMap">
-        select treemenu.id,treemenu.pid,treemenu.name as title,treemenu.name as value,treemenu.url
+    <select id="selectAll" resultMap="BaseResultMap">
+        select *
         from treemenu
     </select>
 
+    <select id="selectById" resultMap="BaseResultMap">
+        select *
+        from treemenu where id = #{id}
+    </select>
+
+    <select id="selectByName" parameterType="String" resultType="TreeMenu">
+        select * from treemenu where name =#{name}
+    </select>
+
+    <select id="selectByUrl" parameterType="String" resultType="TreeMenu">
+        select * from treemenu where url =#{url}
+    </select>
+
+    <update id="editByPermission" parameterType="TreeMenu">
+        update treemenu
+        set name = #{name},url = #{url}
+        where id = #{id}
+    </update>
+
+    <insert id="insertPermission" parameterType="TreeMenu" >
+        insert into treemenu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="pid != null">
+                pid,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="icon != null">
+                icon,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="pid != null">
+                #{pid},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="icon != null">
+                #{icon},
+            </if>
+            <if test="url != null">
+                #{url},
+            </if>
+        </trim>
+
+    </insert>
+
+    <delete id="delByPermissionIds" parameterType="java.util.List">
+        delete from treemenu where id in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--    删除中间表-->
+    <delete id="delRolePermission" parameterType="java.util.List">
+        delete from role_treemenu where tid in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectByPid" resultMap="BaseResultMap">
+        select *
+        from treemenu where pid = #{id}
+    </select>
 </mapper>

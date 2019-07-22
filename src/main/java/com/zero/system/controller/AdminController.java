@@ -112,7 +112,7 @@ public class AdminController {
             }
             if(byEmail != null && !byEmail.getId().equals(admin.getId())){
                 //与修改邮箱一样，但存在数据库中，表示后来改的邮箱已存在
-                ajaxResult.ajaxFalse("用户名已存在");
+                ajaxResult.ajaxFalse("邮箱已存在");
                 return ajaxResult;
             }
             int count = adminService.editByAdmin(admin);

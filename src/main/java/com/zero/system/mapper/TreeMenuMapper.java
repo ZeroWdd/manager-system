@@ -1,6 +1,5 @@
 package com.zero.system.mapper;
 
-import com.zero.system.entity.Permission;
 import com.zero.system.entity.TreeMenu;
 
 import java.util.List;
@@ -14,5 +13,21 @@ import java.util.List;
 public interface TreeMenuMapper {
     List<TreeMenu> selectByAdminId(Integer id);
 
-    List<Permission> selectAll();
+    List<TreeMenu> selectAll();
+
+    TreeMenu selectById(Integer id);
+
+    TreeMenu selectByName(String name);
+
+    TreeMenu selectByUrl(String url);
+
+    int editByPermission(TreeMenu treeMenu);
+
+    int insertPermission(TreeMenu treeMenu);
+
+    int delByPermissionIds(List<Integer> ids);
+
+    void delRolePermission(List<Integer> ids);
+
+    List<TreeMenu> selectByPid(Integer id);
 }

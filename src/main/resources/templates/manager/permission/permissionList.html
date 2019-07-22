@@ -6,6 +6,8 @@
     <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/layuiadmin/style/admin.css}" media="all">
     <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <!--tree插件-->
+    <link rel="stylesheet" th:href="@{/layuiadmin/extend/treetable/treetable.css}">
 </head>
 <body>
 <div class="layui-fluid">
@@ -13,45 +15,107 @@
 
         <div class="layui-card-body">
             <div style="padding-bottom: 10px;">
-                <button class="layui-btn layuiadmin-btn-admin" data-type="batchdel">删除</button>
-                <button class="layui-btn layuiadmin-btn-admin" data-type="add">添加</button>
+                <button class="layui-btn layuiadmin-btn-admin" data-type="addParent">添加父节点</button>
             </div>
-            <form class="layui-form">
-                <div id="xtree1" style="width:400px;border:1px solid black;padding: 10px 0 25px 5px;"></div>
-            </form>
+            <table id="table1" class="layui-table" lay-filter="table1"></table>
 
         </div>
     </div>
 </div>
 
 <script th:src="@{/layuiadmin/layui/layui.js}"></script>
-<script th:src="@{/layuiadmin/layui-xtree/layui-xtree.js}"></script>
+<script th:src="@{/layuiadmin/extend/treetable/treetable.js}"></script>
+
+<script type="text/html" id="oper-col">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-success layui-btn-xs" lay-event="add">添加</a>
+</script>
 
 <script>
-
-    layui.use(['form','jquery'], function(){
+    layui.config({
+        base: '/layuiadmin/extend/'
+    }).extend({
+        treetable: 'treetable/treetable'
+    }).use(['treetable','table','jquery'], function () {
+        var treetable = layui.treetable;
+        var table = layui.table;
         var $ = layui.jquery;
-        var form = layui.form;
-        var xtree1 = null;
-        $.ajax({
-            url:'/manager/permissionList',
-            dataType:'json',
-            type:'post',
-            success:function (data) {
-                xtree1 = new layuiXtree({
-                    elem: 'xtree1'   //(必填) 放置xtree的容器id，不要带#号
-                    , form: form     //(必填) layui 的 from
-                    , data: data     //(必填) json数组（数据格式在下面）
-                });
-            }
+
+        // 渲染表格
+        treetable.render({
+            treeColIndex: 2,          // treetable新增参数
+            treeSpid: -1,             // treetable新增参数
+            treeIdName: 'd_id',       // treetable新增参数
+            treePidName: 'd_pid',     // treetable新增参数
+            treeDefaultClose: true,   // treetable新增参数
+            treeLinkage: true,        // treetable新增参数
+            elem: '#table1',
+            url: '/manager/permissionList',
+            cols: [
+                [
+                    {type: 'numbers'},
+                    {field: 'name', title: '名称'},
+                    {field: 'url', title: '路径'},
+                    {templet:'#oper-col',title:'操作'}
+                ]
+            ]
         });
 
-        var active = {
-            batchdel:function () {
-                console.log(xtree1.GetParent('控制面板'));
-                console.log(xtree1.GetParent('用户列表'));
-                console.log(xtree1.GetChecked());
+        table.on('tool(table1)',function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if(layEvent === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    del(data,obj,index);
+                });
+            }else if(layEvent === 'edit'){
+                layer.open({
+                    type: 2,
+                    title: '添加权限',
+                    skin: 'layui-layer-demo', //加上边框
+                    area: ['500px', '450px'], //宽高
+                    content: '/manager/addPermission?type=edit&id='+data.id
+                });
+            }else if(layEvent === 'add'){
+                layer.open({
+                    type: 2,
+                    title: '添加权限',
+                    skin: 'layui-layer-demo', //加上边框
+                    area: ['500px', '450px'], //宽高
+                    content: '/manager/addPermission?type=add&id='+data.id
+                });
+            }
+        })
 
+        function del(data,obj,index){
+            var jsonObj = {};
+            jsonObj["ids[0]"] = data.id;
+            $.ajax({
+                url:'/manager/delPermission',
+                data:jsonObj,
+                dataType:'json',
+                type:'post',
+                success:function (data) {
+                    if (data.success){
+                        obj.del(); //删除对应行（tr）的DOM结构
+                        layer.close(index);
+                    }else{
+                        layer.msg(data.message);
+                    }
+                }
+            })
+        }
+
+        var active = {
+            addParent:function () {
+                layer.open({
+                    type: 2,
+                    title: '添加权限',
+                    skin: 'layui-layer-demo', //加上边框
+                    area: ['500px', '450px'], //宽高
+                    content: '/manager/addPermission?type=addParent'
+                });
             }
         }
 
@@ -59,7 +123,11 @@
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
+
     });
+
+
+
 
 
 </script>

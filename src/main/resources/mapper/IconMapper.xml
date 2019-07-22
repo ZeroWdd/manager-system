@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.system.mapper.IconMapper">
+    <resultMap id="BaseResultMap" type="com.zero.system.entity.Icon">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="url" jdbcType="INTEGER" property="url" />
+
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,url
+    </sql>
+
+    <select id="selectAll" resultType="Icon">
+        select * from icon
+    </select>
+
+</mapper>
