@@ -92,7 +92,7 @@
                 add: function() {
                     layer.open({
                         type: 2,
-                        title: '添加管理员',
+                        title: '添加角色',
                         skin: 'layui-layer-demo', //加上边框
                         area: ['500px', '450px'], //宽高
                         content: '/manager/addRole'
@@ -122,7 +122,7 @@
             function edit(data) {
                 layer.open({
                     type: 2,
-                    title: '修改管理员信息',
+                    title: '修改角色信息',
                     skin: 'layui-layer-demo', //加上边框
                     area: ['500px', '450px'], //宽高
                     method: 'post',
@@ -152,7 +152,7 @@
             function allot(data) {
                 layer.open({
                     type: 2,
-                    title: '添加管理员',
+                    title: '分配权限',
                     skin: 'layui-layer-demo', //加上边框
                     area: ['700px', '450px'], //宽高
                     content: '/manager/allotPer?id='+data.id

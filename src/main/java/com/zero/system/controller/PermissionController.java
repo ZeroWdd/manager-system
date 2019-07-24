@@ -166,6 +166,12 @@ public class PermissionController {
         return ajaxResult;
     }
 
+    /**
+     * 给角色分配权限
+     * @param data
+     * @param id
+     * @return
+     */
     @PostMapping("/allotPer")
     @ResponseBody
     public AjaxResult allotPre(Data data,Integer id){

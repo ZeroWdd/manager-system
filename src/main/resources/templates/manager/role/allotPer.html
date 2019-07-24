@@ -39,7 +39,7 @@
         var table = layui.table;
         var $ = layui.jquery;
 
-        treetable =  $.extend(table, {config: {checkName: 'checked'}});
+        //treetable =  $.extend(table, {config: {checkName: 'checked'}});
         // 渲染表格
         treetable.render({
             treeColIndex: 2,          // treetable新增参数
@@ -57,9 +57,24 @@
                     {field: 'name', title: '名称'},
                     {field: 'url', title: '路径'}
                 ]
-            ]
+            ],
+            done:function () {
+                var data = table.cache.table1;
+                $(data).each(function (index,d) {
+                    if(d.checked){
+                        d["LAY_CHECKED"] = 'true';
+
+                        var index= d['LAY_TABLE_INDEX'];
+                        $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
+                        $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                    }
+                })
+            }
         });
 
+        $(function () {
+
+        })
 
         var active = {
             add:function () {
@@ -76,7 +91,7 @@
                     type:'post',
                     success:function (data) {
                         if (data.success){
-                            window.location.reload();
+                            window.parent.location.reload();
                         }else{
                             layer.msg(data.message);
                         }
