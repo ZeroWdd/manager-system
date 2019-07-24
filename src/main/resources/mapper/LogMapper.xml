@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zero.system.mapper.LogMapper">
+    <resultMap id="BaseResultMap" type="com.zero.system.entity.Log">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="logTime"  jdbcType="VARCHAR" property="logTime" />
+        <result column="uri" jdbcType="VARCHAR" property="uri" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,username,logTime,uri
+    </sql>
+
+    <insert id="insertByLog" parameterType="Log">
+        insert into log(username,logTime,uri) values (#{username},#{logTime},#{uri})
+    </insert>
+
+
+    <select id="queryList" resultMap="BaseResultMap" >
+        <!-- 根据条件查询 所有信息 -->
+        select
+        *
+        from log
+        <where>
+            <if test="username!=null"> and username LIKE concat("%",#{username},"%") </if>
+            <if test="stime!=null and ftime!=null"> and logTime &gt;= #{stime} and logTime &lt;= #{ftime} </if>
+        </where>
+        limit #{startIndex},#{pagesize}
+    </select>
+
+    <select id="queryCount" resultType="int" >
+        select count(*) from log
+        <where>
+            <if test="username!=null"> and username LIKE concat("%",#{username},"%") </if>
+            <if test="stime!=null and ftime!=null"> and logTime &gt;= #{stime} and logTime &lt;= #{ftime} </if>
+        </where>
+    </select>
+
+</mapper>
