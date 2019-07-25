@@ -1,11 +1,14 @@
 package com.zero.system.entity;
 
+import org.springframework.stereotype.Component;
+
 /**
  * @Classname Log
  * @Description None
  * @Date 2019/7/24 9:51
  * @Created by WDD
  */
+@Component
 public class Log {
     private Integer id;
     private String logTime;

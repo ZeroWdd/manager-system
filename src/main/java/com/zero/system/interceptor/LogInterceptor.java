@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 public class LogInterceptor implements HandlerInterceptor{
 
     @Autowired
+    private Log log;
+    @Autowired
     private LogService logService;
 
     @Override
@@ -36,8 +38,10 @@ public class LogInterceptor implements HandlerInterceptor{
             username = admin.getUsername();
         }
         String uri = request.getRequestURI();
+        if(uri.equals("/manager/logList")){
+            return;
+        }
 
-        Log log = new Log();
         log.setLogTime(stringDate);
         log.setUsername(username);
         log.setUri(uri);

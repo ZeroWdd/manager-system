@@ -32,6 +32,6 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/manager/**")
                 .excludePathPatterns("/static/**","/","/manager/login");
         registry.addInterceptor(setBean()).addPathPatterns("/manager/**")
-                .excludePathPatterns("/static/**","/","/manager/login","/manager/logList");
+                .excludePathPatterns("/static/**","/","/manager/login");
     }
 }
