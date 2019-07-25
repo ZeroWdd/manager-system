@@ -8,6 +8,7 @@ import com.zero.system.util.AjaxResult;
 import com.zero.system.util.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,17 +83,34 @@ public class DispatherController {
         return ajaxResult;
     }
 
+    /**
+     * 登出
+     * @param session
+     * @return
+     */
     @GetMapping("/logout")
     public String logout(HttpSession session){
         session.invalidate();
         return "manager/login";
     }
 
+    /**
+     * 跳转修改密码页面
+     * @return
+     */
     @GetMapping("/password")
     public String password(){
         return "manager/common/password";
     }
 
+    /**
+     * 修改密码
+     * @param session
+     * @param password
+     * @param newpassword
+     * @param repassword
+     * @return
+     */
     @PostMapping("/editPassword")
     @ResponseBody
     public AjaxResult editPassword(HttpSession session,String password,String newpassword,String repassword){
@@ -111,6 +129,30 @@ public class DispatherController {
             ajaxResult.ajaxTrue("修改密码成功");
         }else{
             ajaxResult.ajaxFalse("系统错误");
+        }
+        return ajaxResult;
+    }
+
+    @GetMapping("/info")
+    public String info(HttpSession session, Model model){
+        Admin admin = (Admin) session.getAttribute(Const.ADMIN);
+        Role role = roleService.selectById(admin.getRid());
+        model.addAttribute(Const.ROLE,role);
+        return "manager/common/info";
+    }
+
+    @PostMapping("/editInfo")
+    @ResponseBody
+    public AjaxResult editInfo(Admin admin,HttpSession session){
+        Admin ad = (Admin) session.getAttribute(Const.ADMIN);
+        ad.setUsername(admin.getUsername());
+        ad.setEmail(admin.getEmail());
+        ad.setPhone(admin.getPhone());
+        int count = adminService.editByAdmin(ad);
+        if(count >= 1){
+            ajaxResult.ajaxTrue("修改成功");
+        }else{
+            ajaxResult.ajaxFalse("修改失败");
         }
         return ajaxResult;
     }
