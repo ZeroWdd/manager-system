@@ -22,7 +22,7 @@
         *
         from log
         <where>
-            <if test="username!=null"> and username LIKE concat("%",#{username},"%") </if>
+            <if test="username!=null"> and username = #{username} </if>
             <if test="stime!=null and ftime!=null"> and logTime &gt;= #{stime} and logTime &lt;= #{ftime} </if>
         </where>
         limit #{startIndex},#{pagesize}
@@ -31,9 +31,15 @@
     <select id="queryCount" resultType="int" >
         select count(*) from log
         <where>
-            <if test="username!=null"> and username LIKE concat("%",#{username},"%") </if>
+            <if test="username!=null"> and username = #{username} </if>
             <if test="stime!=null and ftime!=null"> and logTime &gt;= #{stime} and logTime &lt;= #{ftime} </if>
         </where>
     </select>
 
+    <delete id="delByLogIds" parameterType="java.util.List">
+        delete from log where id in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

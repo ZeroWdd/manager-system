@@ -35,7 +35,6 @@
         <div class="layui-card-body">
             <div style="padding-bottom: 10px;">
                 <button class="layui-btn layuiadmin-btn-admin" data-type="batchdel">删除</button>
-                <button class="layui-btn layuiadmin-btn-admin" data-type="add">添加</button>
             </div>
 
             <table id="table" lay-filter="table"></table>
@@ -46,12 +45,6 @@
 </div>
 
 <script th:src="@{/layuiadmin/layui/layui.js}"></script>
-
-<script type="text/html" id="table_admin">
-    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="fa fa-pencil"></i>编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="fa fa-trash-o"></i>删除</a>
-</script>
-
 
 <script>
 
@@ -81,8 +74,7 @@
                     {field: 'id', title: '编号', width:70},
                     {field: 'username', title: '管理员', width:150},
                     {field: 'logTime', title: '时间', width: 300},
-                    {field: 'uri', title: '访问路径', width:200},
-                    {fixed: 'right',title:'操作', width: 240, align:'center', toolbar: '#table_admin'}
+                    {field: 'uri', title: '访问路径', width:200}
                 ]
             ],
             //用于搜索结果重载
@@ -108,15 +100,6 @@
                     }
                 });
             },
-            add: function() {
-                layer.open({
-                    type: 2,
-                    title: '添加管理员',
-                    skin: 'layui-layer-demo', //加上边框
-                    area: ['500px', '450px'], //宽高
-                    content: '/manager/addAdmin'
-                });
-            },
             batchdel:function () {
                 var checkAll = table.checkStatus('sreload');
                 if(checkAll.data.length == 0){
@@ -128,7 +111,7 @@
                             jsonObj["ids["+i+"]"] = checkAll.data[i].id;
                         }
                         $.ajax({
-                            url:'/manager/delAdmin',
+                            url:'/manager/delLog',
                             data:jsonObj,
                             dataType:'json',
                             type:'post',
@@ -150,49 +133,6 @@
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
-
-        table.on('tool(table)', function(obj){ //注：tool 是工具条事件名，table 是 table 原始容器的属性 lay-filter="对应的值"
-            var data = obj.data; //获得当前行数据
-            var layEvent = obj.event; //获得 lay-event 对应的值
-            if(layEvent === 'edit'){
-                edit(data);
-            } else if(layEvent === 'del'){
-                layer.confirm('真的删除行么', function(index){
-                    del(data,obj,index);
-                });
-            }
-        });
-
-        function edit(data) {
-            layer.open({
-                type: 2,
-                title: '修改管理员信息',
-                skin: 'layui-layer-demo', //加上边框
-                area: ['500px', '450px'], //宽高
-                method: 'post',
-                content: '/manager/addAdmin?type=edit&id='+data.id
-            });
-        }
-        //后边两个参数仅仅是因为要执行动态删除dom
-        function del(data,obj,index){
-            var jsonObj = {};
-            jsonObj["ids[0]"] = data.id;
-            $.ajax({
-                url:'/manager/delAdmin',
-                data:jsonObj,
-                dataType:'json',
-                type:'post',
-                success:function (data) {
-                    if (data.success){
-                        obj.del(); //删除对应行（tr）的DOM结构
-                        layer.close(index);
-                    }else{
-                        layer.msg(data.message);
-                    }
-                }
-            })
-        }
-
     });
 
 

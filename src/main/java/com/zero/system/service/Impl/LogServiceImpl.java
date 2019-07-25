@@ -40,4 +40,9 @@ public class LogServiceImpl implements LogService {
         pageBean.setTotalsize(totalsize);
         return pageBean;
     }
+
+    @Override
+    public int delByLogIds(List<Integer> ids) {
+        return logMapper.delByLogIds(ids);
+    }
 }

@@ -17,4 +17,6 @@ public interface LogMapper {
     List<Log> queryList(Map<String, Object> paramMap);
 
     Integer queryCount(Map<String, Object> paramMap);
+
+    int delByLogIds(List<Integer> ids);
 }

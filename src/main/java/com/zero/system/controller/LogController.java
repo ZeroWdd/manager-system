@@ -2,14 +2,13 @@ package com.zero.system.controller;
 
 import com.zero.system.entity.Log;
 import com.zero.system.service.LogService;
+import com.zero.system.util.AjaxResult;
+import com.zero.system.util.Data;
 import com.zero.system.util.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,14 +24,28 @@ import java.util.Map;
 public class LogController {
 
     @Autowired
+    private AjaxResult ajaxResult;
+    @Autowired
     private LogService logService;
 
+    /**
+     * 日志页面
+     * @return
+     */
     @GetMapping("/log")
     public String log(){
         return "manager/log/logList";
     }
 
 
+    /**
+     * 异步加载日志列表
+     * @param pageno
+     * @param pagesize
+     * @param username
+     * @param logTime
+     * @return
+     */
     @RequestMapping("/logList")
     @ResponseBody
     public Object adminList(@RequestParam(value = "page", defaultValue = "1") Integer pageno,
@@ -58,6 +71,19 @@ public class LogController {
         rest.put("count",pageBean.getTotalsize());
         rest.put("data", pageBean.getDatas());
         return rest;
+    }
+
+
+    @PostMapping("/delLog")
+    @ResponseBody
+    public AjaxResult delLog(Data data){
+        int count = logService.delByLogIds(data.getIds());
+        if(count >= data.getIds().size()){
+            ajaxResult.ajaxTrue("删除成功");
+        }else{
+            ajaxResult.ajaxFalse("删除失败");
+        }
+        return ajaxResult;
     }
 
 
