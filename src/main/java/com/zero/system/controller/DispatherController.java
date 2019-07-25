@@ -87,4 +87,32 @@ public class DispatherController {
         session.invalidate();
         return "manager/login";
     }
+
+    @GetMapping("/password")
+    public String password(){
+        return "manager/common/password";
+    }
+
+    @PostMapping("/editPassword")
+    @ResponseBody
+    public AjaxResult editPassword(HttpSession session,String password,String newpassword,String repassword){
+        Admin admin = (Admin) session.getAttribute(Const.ADMIN);
+        if(!password.equals(admin.getPassword())){
+            ajaxResult.ajaxFalse("原密码错误");
+            return ajaxResult;
+        }
+        if(!newpassword.equals(repassword)){
+            ajaxResult.ajaxFalse("密码不一致");
+            return ajaxResult;
+        }
+        admin.setPassword(newpassword);
+        int count = adminService.editByAdmin(admin);
+        if(count >= 1){
+            ajaxResult.ajaxTrue("修改密码成功");
+        }else{
+            ajaxResult.ajaxFalse("系统错误");
+        }
+        return ajaxResult;
+    }
+
 }

@@ -9,7 +9,7 @@ package com.zero.system.entity;
 public class Admin {
     private Integer id;
     private String username;
-    private String password = "123";
+    private String password;
     private String phone;
     private String email;
     private Integer rid;

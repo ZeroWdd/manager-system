@@ -135,6 +135,7 @@ public class AdminController {
             }
             String stringDate = DateUtil.getStringDate("yyyy-MM-dd");
             admin.setCreatetime(stringDate);
+            admin.setPassword("123"); // 设置默认密码
             int count = adminService.insertAdmin(admin);
             if(count > 0){
                 ajaxResult.ajaxTrue("添加成功");

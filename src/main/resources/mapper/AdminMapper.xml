@@ -70,6 +70,7 @@
     <update id="editByAdmin" parameterType="Admin">
         update admin
         set username = #{username},email = #{email},phone = #{phone},rid = #{rid},status = #{status}
+        <if test="password != null"> ,password = #{password}</if>
         where id = #{id}
     </update>
 
