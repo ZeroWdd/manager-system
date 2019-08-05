@@ -82,16 +82,17 @@ public class PermissionController {
      */
     @GetMapping("/addPermission")
     public String addPermission(String type, Integer id, Model model,HttpSession session){
+        //加载icon列表,存入session
+        if(session.getAttribute(Const.ICON) == null){
+            List<Icon> iconList = iconService.selectAll();
+            session.setAttribute(Const.ICON,iconList);
+        }
         if(type != null && type.equals("edit")){
             TreeMenu treeMenu = treeMenuService.selectById(id);
             model.addAttribute(Const.TREEMENU,treeMenu);
         }else if(type != null && type.equals("add")){
             model.addAttribute("pid",id); //设为父id
         }else if(type != null && type.equals("addParent")){
-            if(session.getAttribute(Const.ICON) == null){
-                List<Icon> iconList = iconService.selectAll();
-                session.setAttribute(Const.ICON,iconList);
-            }
             return "manager/permission/addParentNode";
         }
         return "manager/permission/addPermission";

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>添加权限</title>
     <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
 </head>
 <body>
 <div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 0;">
@@ -17,11 +18,12 @@
     <div class="layui-form-item">
         <label class="layui-form-label">图标</label>
         <div class="layui-input-inline">
-            <select name="icon" class="select">
+            <select lay-filter="icon" name="icon" class="select">
                 <option value="0">请选择图标</option>
                 <option th:each="icon : ${session.icon}" th:value="${icon.url}" th:text="${icon.url}"> </option>
             </select>
         </div>
+        <i id="icon" style="margin-top: 13px"></i>
     </div>
 
     <div class="layui-form-item">
@@ -64,8 +66,13 @@
             $("input").val("");
         })
 
-    });
+        form.on('select(icon)', function(data){
+            $("#icon").removeClass();
+            $("#icon").addClass("fa").addClass(data.value);
+        });
 
+
+    });
 
 </script>
 </body>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>添加权限</title>
     <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
 </head>
 <body>
 <div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 0;">
@@ -18,10 +19,21 @@
     <div class="layui-form-item">
         <label class="layui-form-label">地址</label>
         <div class="layui-input-inline">
-            <input th:value="${treeMenu != null}?${treeMenu.url}:''"  type="text" name="url" lay-verify="required" placeholder="请输入地址" autocomplete="off" class="layui-input">
+            <input th:if="${treeMenu.url != ''}" th:value="${treeMenu.url}" type="text" name="url" lay-verify="required" placeholder="请输入地址" autocomplete="off" class="layui-input">
+            <input th:if="${treeMenu.url == ''}"  type="text" name="url" lay-verify="required" placeholder="根目录无需地址" autocomplete="off" class="layui-input layui-disabled" disabled>
         </div>
     </div>
-
+    <th:block th:if="${treeMenu.url == ''}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">图标</label>
+            <div class="layui-input-inline">
+                <select lay-filter="icon" name="icon" class="select">
+                    <option th:each="icon : ${session.icon}" th:value="${icon.url}" th:text="${icon.url}" th:selected="${icon.url==treeMenu.icon}?true:false"> </option>
+                </select>
+            </div>
+            <i id="icon" style="margin-top: 13px" th:attr="Class=| fa ${treeMenu.icon} |"></i>
+        </div>
+    </th:block>
     <div class="layui-form-item">
         <div class="layui-input-block">
             <button th:text="${treeMenu != null}?'立即修改':'立即添加'" class="layui-btn" lay-submit="" lay-filter="addpermission">立即添加</button>
@@ -61,6 +73,11 @@
         $("#reset").click(function () {
             $("input").val("");
         })
+
+        form.on('select(icon)', function(data){
+            $("#icon").removeClass();
+            $("#icon").addClass("fa").addClass(data.value);
+        });
 
     });
 
