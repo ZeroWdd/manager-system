@@ -1,6 +1,6 @@
 # 后台管理系统
 
-##简介:
+## 简介:
 简单的后台开发模板框架，具备菜单管理,用户管理,角色管理,权限管理,日志管理这5个功能。
 
 ## 编译环境：
@@ -44,6 +44,16 @@
 > 系统日志：
 >
 > > 日志管理
+
+## 启动设置:
+* 修改application.yml中的数据链接
+
+* 执行`mysql -uroot -p 数据库 < manager_system.sql`导入数据库脚本。
+* 运行`ManagerSystemApplication`，启动后访问: <localhost:8080/manager/login> 
+* 管理员:
+  * 账号：superadmin
+  * 密码:   123456
+
 
 ## 数据表关系：
 
