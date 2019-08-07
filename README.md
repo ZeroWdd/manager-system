@@ -49,7 +49,7 @@
 * 修改application.yml中的数据链接
 
 * 执行`mysql -uroot -p 数据库 < manager_system.sql`导入数据库脚本。
-* 运行`ManagerSystemApplication`，启动后访问: [网址](localhost:8080/manager/login>) 
+* 运行`ManagerSystemApplication`，启动后访问: [网址](localhost:8080/manager/login) 
 * 管理员:
   * 账号：`superadmin`
   * 密码:   `123456`
