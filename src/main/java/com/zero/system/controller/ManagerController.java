@@ -7,6 +7,7 @@ import com.zero.system.util.AjaxResult;
 import com.zero.system.util.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,7 +48,7 @@ public class ManagerController {
     @PostMapping("/treeMenu")
     @ResponseBody
     public Object treeMenu(HttpSession session){
-        if(session.getAttribute(Const.TREEMENU) != null){
+        if(!StringUtils.isEmpty(session.getAttribute(Const.TREEMENU))){
             return session.getAttribute(Const.TREEMENU);
         }
         Admin admin = (Admin) session.getAttribute(Const.ADMIN);
