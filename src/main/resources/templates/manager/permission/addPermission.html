@@ -19,11 +19,12 @@
     <div class="layui-form-item">
         <label class="layui-form-label">地址</label>
         <div class="layui-input-inline">
-            <input th:if="${treeMenu.url != ''}" th:value="${treeMenu.url}" type="text" name="url" lay-verify="required" placeholder="请输入地址" autocomplete="off" class="layui-input">
-            <input th:if="${treeMenu.url == ''}"  type="text" name="url" lay-verify="required" placeholder="根目录无需地址" autocomplete="off" class="layui-input layui-disabled" disabled>
+            <input th:if="${treeMenu != null && treeMenu.url != '-1'}" th:value="${treeMenu.url}" type="text" name="url" lay-verify="required" placeholder="请输入地址" autocomplete="off" class="layui-input">
+            <input th:if="${treeMenu != null && treeMenu.url == '-1'}"  type="text" name="url" value="-1" placeholder="根目录无需地址" autocomplete="off" class="layui-input layui-disabled" disabled>
+            <input th:if="${treeMenu == null}" type="text" name="url" placeholder="根目录无需地址" autocomplete="off" class="layui-input layui-disabled" disabled>
         </div>
     </div>
-    <th:block th:if="${treeMenu.url == ''}">
+    <th:block th:if="${treeMenu != null && treeMenu.url == '-1'}">
         <div class="layui-form-item">
             <label class="layui-form-label">图标</label>
             <div class="layui-input-inline">

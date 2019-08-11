@@ -135,6 +135,10 @@ public class PermissionController {
                 ajaxResult.ajaxFalse("地址已存在");
                 return ajaxResult;
             }
+            //若是添加父节点
+            if(treeMenu.getPid().equals(-1)){
+                treeMenu.setUrl("-1");
+            }
             int count = treeMenuService.insertPermission(treeMenu);
             if(count > 0){
                 ajaxResult.ajaxTrue("添加成功");
