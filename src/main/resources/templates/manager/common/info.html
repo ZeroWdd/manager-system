@@ -71,12 +71,9 @@
                     type:'post',
                     success:function (data) {
                         if (data.success){
-                            layer.msg(data.message);
-                            layer.alert(data.message,function(){
-                                parent.layer.close(index);//关闭弹出层
-                            });
+                            layer.msg(data.message,{time:1000});
                         }else{
-                            layer.msg(data.message);
+                            layer.msg(data.message,{time:1000});
                         }
                     }
                 });
