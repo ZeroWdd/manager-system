@@ -16,10 +16,10 @@ public class ErrorPageConfig  implements ErrorPageRegistrar {
 
     @Override
     public void registerErrorPages(ErrorPageRegistry registry) {
-        ErrorPage error400Page = new ErrorPage(HttpStatus.BAD_REQUEST,"/error/error400" );
-        ErrorPage error401Page = new ErrorPage(HttpStatus.UNAUTHORIZED,"/error/error401");
-        ErrorPage error403Page = new ErrorPage(HttpStatus.FORBIDDEN,"/error/error403");
-        ErrorPage error500Page = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR,"/error/error500");
+        ErrorPage error400Page = new ErrorPage(HttpStatus.BAD_REQUEST,"/manager/error/error400" );
+        ErrorPage error401Page = new ErrorPage(HttpStatus.UNAUTHORIZED,"/manager/error/error401");
+        ErrorPage error403Page = new ErrorPage(HttpStatus.FORBIDDEN,"/manager/error/error403");
+        ErrorPage error500Page = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR,"/manager/error/error500");
         registry.addErrorPages(error400Page,error401Page,error403Page,error500Page);
     }
 }
