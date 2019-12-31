@@ -2,6 +2,7 @@ package com.zero.system.service;
 
 import com.zero.system.entity.Admin;
 import com.zero.system.util.PageBean;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import java.util.Map;
  * @Date 2019/7/16 12:20
  * @Created by WDD
  */
-public interface AdminService {
+public interface AdminService extends UserDetailsService {
 
     Admin login(String username, String password);
 

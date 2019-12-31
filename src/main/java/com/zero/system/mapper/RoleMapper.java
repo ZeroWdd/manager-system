@@ -1,6 +1,7 @@
 package com.zero.system.mapper;
 
 import com.zero.system.entity.Role;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
@@ -27,4 +28,7 @@ public interface RoleMapper {
     int editByRole(Role role);
 
     int insertRole(Role role);
+
+    @Select("select role.id,role.name from role,admin where admin.rid = role.id and admin.id = #{adminId}")
+    List<Role> findByAdminId(Integer adminId);
 }

@@ -24,13 +24,13 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        //registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/manager/**")
-                .excludePathPatterns("/static/**","/","/manager/login");
+//        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/manager/**")
+//                .excludePathPatterns("/static/**","/","/manager/login");
         registry.addInterceptor(setBean()).addPathPatterns("/manager/**")
                 .excludePathPatterns("/static/**","/","/manager/login");
     }

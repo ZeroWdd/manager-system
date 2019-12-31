@@ -5,6 +5,8 @@ import com.zero.system.mapper.AdminMapper;
 import com.zero.system.service.AdminService;
 import com.zero.system.util.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,5 +71,10 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Admin selectByEmail(String email) {
         return adminMapper.selectByEmail(email);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        return adminMapper.findByName(s);
     }
 }

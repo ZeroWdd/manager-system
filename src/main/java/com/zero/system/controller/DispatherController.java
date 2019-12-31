@@ -50,38 +50,38 @@ public class DispatherController {
      * @param admin
      * @return
      */
-    @PostMapping("/login")
-    @ResponseBody
-    public AjaxResult doLogin(Admin admin, HttpSession session){
-        if(StringUtils.isEmpty(admin.getUsername())){
-            ajaxResult.ajaxFalse("用户名不能为空");
-            return ajaxResult;
-        }
-        if(StringUtils.isEmpty(admin.getPassword())){
-            ajaxResult.ajaxFalse("密码不能为空");
-            return ajaxResult;
-        }
-        // 查询用户是否存在 并返回用户数据
-        try {
-            Admin ad = adminService.login(admin.getUsername(),admin.getPassword());
-            if(StringUtils.isEmpty(ad)){
-                ajaxResult.ajaxFalse("用户名或密码错误");
-            }else{
-                session.setAttribute(Const.ADMIN,ad);
-                ajaxResult.ajaxTrue("登录成功");
-
-                //获取角色列表，存入session
-                if(session.getAttribute(Const.ROLE) == null){
-                    List<Role> roleList = roleService.selectAll();
-                    session.setAttribute(Const.ROLE,roleList);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            ajaxResult.ajaxFalse("系统错误,请刷新");
-        }
-        return ajaxResult;
-    }
+//    @PostMapping("/login")
+//    @ResponseBody
+//    public AjaxResult doLogin(Admin admin, HttpSession session){
+//        if(StringUtils.isEmpty(admin.getUsername())){
+//            ajaxResult.ajaxFalse("用户名不能为空");
+//            return ajaxResult;
+//        }
+//        if(StringUtils.isEmpty(admin.getPassword())){
+//            ajaxResult.ajaxFalse("密码不能为空");
+//            return ajaxResult;
+//        }
+//        // 查询用户是否存在 并返回用户数据
+//        try {
+//            Admin ad = adminService.login(admin.getUsername(),admin.getPassword());
+//            if(StringUtils.isEmpty(ad)){
+//                ajaxResult.ajaxFalse("用户名或密码错误");
+//            }else{
+//                session.setAttribute(Const.ADMIN,ad);
+//                ajaxResult.ajaxTrue("登录成功");
+//
+//                //获取角色列表，存入session
+//                if(session.getAttribute(Const.ROLE) == null){
+//                    List<Role> roleList = roleService.selectAll();
+//                    session.setAttribute(Const.ROLE,roleList);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            ajaxResult.ajaxFalse("系统错误,请刷新");
+//        }
+//        return ajaxResult;
+//    }
 
     /**
      * 登出

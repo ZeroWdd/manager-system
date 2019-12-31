@@ -1,6 +1,11 @@
 package com.zero.system.mapper;
 
 import com.zero.system.entity.Admin;
+import org.apache.ibatis.annotations.Many;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 import java.util.Map;
@@ -30,4 +35,12 @@ public interface AdminMapper {
     Admin selectByName(String username);
 
     Admin selectByEmail(String email);
+
+    @Select("select * from admin where username = #{username}")
+    @Results({
+            @Result(id = true, property = "id",column = "id"),
+            @Result(property = "roles", column = "id", javaType = List.class,
+                    many = @Many(select = "com.zero.system.mapper.RoleMapper.findByAdminId"))
+    })
+    Admin findByName(String username);
 }
