@@ -1,5 +1,6 @@
 package com.zero.system.controller;
 
+import com.zero.system.config.ReloadSecuritySource;
 import com.zero.system.entity.Role;
 import com.zero.system.service.RoleService;
 import com.zero.system.util.AjaxResult;
@@ -29,6 +30,9 @@ public class RoleController {
     private AjaxResult ajaxResult;
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private ReloadSecuritySource reloadSecuritySource;
 
     @GetMapping("/role")
     public String role(){
@@ -76,6 +80,7 @@ public class RoleController {
         int count = roleService.delByRoleIds(data.getIds());
         if(count >= data.getIds().size()){
             ajaxResult.ajaxTrue("删除成功");
+            reloadSecuritySource.getReloadSecuritySource();
         }else{
             ajaxResult.ajaxFalse("存在管理员拥有此角色,无法删除");
         }
@@ -135,6 +140,7 @@ public class RoleController {
                 ajaxResult.ajaxFalse("添加失败");
             }
         }
+        reloadSecuritySource.getReloadSecuritySource();
         return ajaxResult;
     }
 
