@@ -2,6 +2,7 @@ package com.zero.system.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.zero.system.config.MyFilterSecurityMetadataSource;
+import com.zero.system.config.ReloadSecuritySource;
 import com.zero.system.entity.Admin;
 import com.zero.system.entity.Role;
 import com.zero.system.entity.TreeMenu;
@@ -43,9 +44,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private RoleService roleService;
 
     @Autowired
-    private RoleMapper roleMapper;
-    @Autowired
-    private TreeMenuMapper treeMenuMapper;
+    private ReloadSecuritySource reloadSecuritySource;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -58,19 +57,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             session.setAttribute(Const.ROLE,roleList);
         }
 
-        Map<RequestMatcher, Collection<ConfigAttribute>> map = new HashMap<>();
-        for(TreeMenu m : treeMenuMapper.selectAll()){
-            if(!StringUtils.isEmpty(m.getUrl())){
-                AntPathRequestMatcher matcher = new AntPathRequestMatcher(m.getUrl());
-                ArrayList<ConfigAttribute> configs = new ArrayList<>();
-                for(Role r : roleMapper.findByTreeMenuId(m.getId())){
-                    org.springframework.security.access.SecurityConfig config = new SecurityConfig(r.getName());
-                    configs.add(config);
-                }
-                map.put(matcher,configs);
-            }
-        }
-        new MyFilterSecurityMetadataSource(map);
+        // 装载权限
+        reloadSecuritySource.getReloadSecuritySource();
         ajaxResult.ajaxTrue("登录成功");
         String json = JSON.toJSONString(ajaxResult);
         response.setContentType("text/json;charset=utf-8");

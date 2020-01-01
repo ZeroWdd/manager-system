@@ -25,10 +25,6 @@ import java.util.*;
  */
 public class MyFilterSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
-    @Autowired
-    private RoleMapper roleMapper;
-    @Autowired
-    private TreeMenuMapper treeMenuMapper;
 
     private static Map<RequestMatcher, Collection<ConfigAttribute>> requestMap;
 
