@@ -60,7 +60,7 @@
 * 运行`ManagerSystemApplication`，启动后访问:<http://localhost:8080/manager/login> 
 * 管理员:
   * 账号：`superadmin`
-  * 密码:   `123456`
+  * 密码:   `123`
 
 
 ## 数据表关系：
