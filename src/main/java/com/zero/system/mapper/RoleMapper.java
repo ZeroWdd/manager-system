@@ -31,4 +31,8 @@ public interface RoleMapper {
 
     @Select("select role.id,role.name from role,admin where admin.rid = role.id and admin.id = #{adminId}")
     List<Role> findByAdminId(Integer adminId);
+
+    @Select("select role.id,role.name from role,role_treemenu,treemenu where role.id = role_treemenu.rid " +
+            "and role_treemenu.tid = treemenu.id and treemenu.id = #{treeMenuId}")
+    List<Role> findByTreeMenuId(Integer treeMenuId);
 }
