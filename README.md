@@ -20,6 +20,8 @@
 > springboot2.0 
 >
 > mybatis
+>
+> spring security
 
 ## jar包管理工具：
 
@@ -33,7 +35,7 @@
 
 > manager_system_1.0.0版本完成  从tag中 V1.0.0可获取完整版本
 >
-> manager_system_2.0.0版本打算结合spring security，尚未完成
+> manager_system_2.0.0版本打算结合spring security完成  从tag中 V2.0.0可获取完整版本
 
 ## 系统功能：
 
