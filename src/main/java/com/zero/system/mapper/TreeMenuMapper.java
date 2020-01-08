@@ -37,4 +37,9 @@ public interface TreeMenuMapper {
     int updateRolePermission(@Param("ids") List<Integer> ids, @Param("id") Integer id);
 
     void delRolePermissionByRid(Integer id);
+
+    List<String> selectByUserName(String username);
+
+    List<String> selectURLAll();
+
 }

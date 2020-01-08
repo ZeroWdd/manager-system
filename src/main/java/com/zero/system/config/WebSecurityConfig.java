@@ -44,12 +44,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterAfter(dynamicallyUrlInterceptor(), FilterSecurityInterceptor.class)
+        http//.addFilterAfter(dynamicallyUrlInterceptor(), FilterSecurityInterceptor.class)
                 .authorizeRequests()
                 .antMatchers("/manager/login").permitAll()
                 .antMatchers("/mystatic/**","/layuiadmin/**","/font-awesome-4.7.0/**").permitAll()
-                .antMatchers("/**")
-                .fullyAuthenticated()
+                //.antMatchers("/**")
+                //.fullyAuthenticated()
+                .anyRequest().access("@rbacConfig.hasPermission(request,authentication)")
                 .and()
                 .formLogin().loginPage("/manager/login").successHandler(loginSuccessHandler).failureHandler(loginFailureHandler)
                 .and()
@@ -64,16 +65,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
     }
 
-    @Bean
-    public DynamicallyUrlInterceptor dynamicallyUrlInterceptor(){
-        DynamicallyUrlInterceptor interceptor = new DynamicallyUrlInterceptor();
-        interceptor.setSecurityMetadataSource(new MyFilterSecurityMetadataSource());
-
-        //配置RoleVoter决策
-        List<AccessDecisionVoter<? extends Object>> decisionVoters = new ArrayList<AccessDecisionVoter<? extends Object>>();
-        decisionVoters.add(new RoleVoter());
-        //设置认证决策管理器
-        interceptor.setAccessDecisionManager(new DynamicallyUrlAccessDecisionManager(decisionVoters));
-        return interceptor;
-    }
+//    @Bean
+//    public DynamicallyUrlInterceptor dynamicallyUrlInterceptor(){
+//        DynamicallyUrlInterceptor interceptor = new DynamicallyUrlInterceptor();
+//        interceptor.setSecurityMetadataSource(new MyFilterSecurityMetadataSource());
+//
+//        //配置RoleVoter决策
+//        List<AccessDecisionVoter<? extends Object>> decisionVoters = new ArrayList<AccessDecisionVoter<? extends Object>>();
+//        decisionVoters.add(new RoleVoter());
+//        //设置认证决策管理器
+//        interceptor.setAccessDecisionManager(new DynamicallyUrlAccessDecisionManager(decisionVoters));
+//        return interceptor;
+//    }
 }

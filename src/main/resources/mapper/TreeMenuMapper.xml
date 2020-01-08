@@ -21,8 +21,23 @@
         and admin.id = #{id}
     </select>
 
+    <select id="selectByUserName" parameterType="String" resultType="java.lang.String">
+        select treemenu.url
+        from admin,role,role_treemenu,treemenu
+        where admin.rid = role.id
+        and role.id = role_treemenu.rid
+        and treemenu.id = role_treemenu.tid
+        and treemenu.pid &lt;&gt; -1
+        and admin.username = #{username}
+    </select>
+
     <select id="selectAll" resultMap="BaseResultMap">
         select *
+        from treemenu
+    </select>
+
+    <select id="selectURLAll" resultType="java.lang.String">
+        select treemenu.url
         from treemenu
     </select>
 
