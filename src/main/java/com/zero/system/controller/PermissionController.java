@@ -37,8 +37,6 @@ public class PermissionController {
     @Autowired
     private IconService iconService;
 
-    @Autowired
-    private ReloadSecuritySource reloadSecuritySource;
 
     /**
      * 跳转登录界面
@@ -150,7 +148,6 @@ public class PermissionController {
                 ajaxResult.ajaxFalse("添加失败");
             }
         }
-        reloadSecuritySource.getReloadSecuritySource();
         return ajaxResult;
     }
 
@@ -173,7 +170,6 @@ public class PermissionController {
         }else{
             ajaxResult.ajaxFalse("删除失败");
         }
-        reloadSecuritySource.getReloadSecuritySource();
         return ajaxResult;
     }
 
@@ -190,7 +186,6 @@ public class PermissionController {
         if(count >= data.getIds().size()){
             ajaxResult.ajaxTrue("分配成功");
         }
-        reloadSecuritySource.getReloadSecuritySource();
         return ajaxResult;
     }
 
