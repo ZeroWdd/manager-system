@@ -5,6 +5,7 @@ import com.zero.system.service.AdminService;
 import com.zero.system.service.RoleService;
 import com.zero.system.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -29,6 +30,8 @@ public class AdminController {
     private AdminService adminService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     /**
      * 跳转管理员页面
@@ -135,7 +138,7 @@ public class AdminController {
             }
             String stringDate = DateUtil.getStringDate("yyyy-MM-dd");
             admin.setCreatetime(stringDate);
-            admin.setPassword("123"); // 设置默认密码
+            admin.setPassword(passwordEncoder.encode("123")); // 设置默认密码
             int count = adminService.insertAdmin(admin);
             if(count > 0){
                 ajaxResult.ajaxTrue("添加成功");
