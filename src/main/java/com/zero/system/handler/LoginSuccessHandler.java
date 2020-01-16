@@ -58,7 +58,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         // 装载权限
-        reloadSecuritySource.getReloadSecuritySource();
+        //reloadSecuritySource.getReloadSecuritySource();
         ajaxResult.ajaxTrue("登录成功");
         String json = JSON.toJSONString(ajaxResult);
         response.setContentType("text/json;charset=utf-8");
