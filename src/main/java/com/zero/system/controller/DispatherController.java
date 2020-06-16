@@ -7,6 +7,7 @@ import com.zero.system.service.RoleService;
 import com.zero.system.util.AjaxResult;
 import com.zero.system.util.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -35,6 +36,8 @@ public class DispatherController {
     private AdminService adminService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     /**
      * 跳转登录界面
@@ -115,7 +118,10 @@ public class DispatherController {
     @ResponseBody
     public AjaxResult editPassword(HttpSession session,String password,String newpassword,String repassword){
         Admin admin = (Admin) session.getAttribute(Const.ADMIN);
-        if(!password.equals(admin.getPassword())){
+        Admin admin1=adminService.selectById(admin.getId());
+        boolean matches = passwordEncoder.matches(password,admin1.getPassword() );
+
+        if(!matches){
             ajaxResult.ajaxFalse("原密码错误");
             return ajaxResult;
         }
@@ -123,7 +129,7 @@ public class DispatherController {
             ajaxResult.ajaxFalse("密码不一致");
             return ajaxResult;
         }
-        admin.setPassword(newpassword);
+        admin.setPassword(passwordEncoder.encode(newpassword));
         int count = adminService.editByAdmin(admin);
         if(count >= 1){
             ajaxResult.ajaxTrue("修改密码成功");
